@@ -99,13 +99,13 @@ function CardExample() {
         <CardFooter>
           <AlertDialog>
             <AlertDialogTrigger render={<Button />}>
-              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={2} data-icon="inline-start" />
+              <HugeiconsIcon icon={PlusSignIcon} strokeWidth={1.5} data-icon="inline-start" />
               Show Dialog
             </AlertDialogTrigger>
             <AlertDialogContent size="sm">
               <AlertDialogHeader>
                 <AlertDialogMedia>
-                  <HugeiconsIcon icon={BluetoothIcon} strokeWidth={2} />
+                  <HugeiconsIcon icon={BluetoothIcon} strokeWidth={1.5} />
                 </AlertDialogMedia>
                 <AlertDialogTitle>Allow accessory to connect?</AlertDialogTitle>
                 <AlertDialogDescription>
@@ -162,25 +162,25 @@ function FormExample() {
               <DropdownMenuTrigger
                 render={<Button variant="ghost" size="icon" />}
               >
-                <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={2} />
+                <HugeiconsIcon icon={MoreVerticalCircle01Icon} strokeWidth={1.5} />
                 <span className="sr-only">More options</span>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-56">
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>File</DropdownMenuLabel>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={FileIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={FileIcon} strokeWidth={1.5} />
                     New File
                     <DropdownMenuShortcut>⌘N</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={FolderIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={FolderIcon} strokeWidth={1.5} />
                     New Folder
                     <DropdownMenuShortcut>⇧⌘N</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
-                      <HugeiconsIcon icon={FolderOpenIcon} strokeWidth={2} />
+                      <HugeiconsIcon icon={FolderOpenIcon} strokeWidth={1.5} />
                       Open Recent
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
@@ -188,26 +188,26 @@ function FormExample() {
                         <DropdownMenuGroup>
                           <DropdownMenuLabel>Recent Projects</DropdownMenuLabel>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={CodeIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={CodeIcon} strokeWidth={1.5} />
                             Project Alpha
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={CodeIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={CodeIcon} strokeWidth={1.5} />
                             Project Beta
                           </DropdownMenuItem>
                           <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
-                              <HugeiconsIcon icon={MoreHorizontalCircle01Icon} strokeWidth={2} />
+                              <HugeiconsIcon icon={MoreHorizontalCircle01Icon} strokeWidth={1.5} />
                               More Projects
                             </DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
                               <DropdownMenuSubContent>
                                 <DropdownMenuItem>
-                                  <HugeiconsIcon icon={CodeIcon} strokeWidth={2} />
+                                  <HugeiconsIcon icon={CodeIcon} strokeWidth={1.5} />
                                   Project Gamma
                                 </DropdownMenuItem>
                                 <DropdownMenuItem>
-                                  <HugeiconsIcon icon={CodeIcon} strokeWidth={2} />
+                                  <HugeiconsIcon icon={CodeIcon} strokeWidth={1.5} />
                                   Project Delta
                                 </DropdownMenuItem>
                               </DropdownMenuSubContent>
@@ -217,7 +217,7 @@ function FormExample() {
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={SearchIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={SearchIcon} strokeWidth={1.5} />
                             Browse...
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
@@ -226,12 +226,12 @@ function FormExample() {
                   </DropdownMenuSub>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={FloppyDiskIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={FloppyDiskIcon} strokeWidth={1.5} />
                     Save
                     <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={DownloadIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={DownloadIcon} strokeWidth={1.5} />
                     Export
                     <DropdownMenuShortcut>⇧⌘E</DropdownMenuShortcut>
                   </DropdownMenuItem>
@@ -248,7 +248,7 @@ function FormExample() {
                       })
                     }
                   >
-                    <HugeiconsIcon icon={EyeIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={EyeIcon} strokeWidth={1.5} />
                     Show Sidebar
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuCheckboxItem
@@ -260,12 +260,12 @@ function FormExample() {
                       })
                     }
                   >
-                    <HugeiconsIcon icon={LayoutIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={LayoutIcon} strokeWidth={1.5} />
                     Show Status Bar
                   </DropdownMenuCheckboxItem>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
-                      <HugeiconsIcon icon={PaintBoardIcon} strokeWidth={2} />
+                      <HugeiconsIcon icon={PaintBoardIcon} strokeWidth={1.5} />
                       Theme
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
@@ -277,15 +277,15 @@ function FormExample() {
                             onValueChange={setTheme}
                           >
                             <DropdownMenuRadioItem value="light">
-                              <HugeiconsIcon icon={SunIcon} strokeWidth={2} />
+                              <HugeiconsIcon icon={SunIcon} strokeWidth={1.5} />
                               Light
                             </DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="dark">
-                              <HugeiconsIcon icon={MoonIcon} strokeWidth={2} />
+                              <HugeiconsIcon icon={MoonIcon} strokeWidth={1.5} />
                               Dark
                             </DropdownMenuRadioItem>
                             <DropdownMenuRadioItem value="system">
-                              <HugeiconsIcon icon={ComputerIcon} strokeWidth={2} />
+                              <HugeiconsIcon icon={ComputerIcon} strokeWidth={1.5} />
                               System
                             </DropdownMenuRadioItem>
                           </DropdownMenuRadioGroup>
@@ -298,17 +298,17 @@ function FormExample() {
                 <DropdownMenuGroup>
                   <DropdownMenuLabel>Account</DropdownMenuLabel>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={UserIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={UserIcon} strokeWidth={1.5} />
                     Profile
                     <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={CreditCardIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={CreditCardIcon} strokeWidth={1.5} />
                     Billing
                   </DropdownMenuItem>
                   <DropdownMenuSub>
                     <DropdownMenuSubTrigger>
-                      <HugeiconsIcon icon={SettingsIcon} strokeWidth={2} />
+                      <HugeiconsIcon icon={SettingsIcon} strokeWidth={1.5} />
                       Settings
                     </DropdownMenuSubTrigger>
                     <DropdownMenuPortal>
@@ -316,16 +316,16 @@ function FormExample() {
                         <DropdownMenuGroup>
                           <DropdownMenuLabel>Preferences</DropdownMenuLabel>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={KeyboardIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={KeyboardIcon} strokeWidth={1.5} />
                             Keyboard Shortcuts
                           </DropdownMenuItem>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={LanguageCircleIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={LanguageCircleIcon} strokeWidth={1.5} />
                             Language
                           </DropdownMenuItem>
                           <DropdownMenuSub>
                             <DropdownMenuSubTrigger>
-                              <HugeiconsIcon icon={NotificationIcon} strokeWidth={2} />
+                              <HugeiconsIcon icon={NotificationIcon} strokeWidth={1.5} />
                               Notifications
                             </DropdownMenuSubTrigger>
                             <DropdownMenuPortal>
@@ -343,7 +343,7 @@ function FormExample() {
                                       })
                                     }
                                   >
-                                    <HugeiconsIcon icon={NotificationIcon} strokeWidth={2} />
+                                    <HugeiconsIcon icon={NotificationIcon} strokeWidth={1.5} />
                                     Push Notifications
                                   </DropdownMenuCheckboxItem>
                                   <DropdownMenuCheckboxItem
@@ -355,7 +355,7 @@ function FormExample() {
                                       })
                                     }
                                   >
-                                    <HugeiconsIcon icon={MailIcon} strokeWidth={2} />
+                                    <HugeiconsIcon icon={MailIcon} strokeWidth={1.5} />
                                     Email Notifications
                                   </DropdownMenuCheckboxItem>
                                 </DropdownMenuGroup>
@@ -366,7 +366,7 @@ function FormExample() {
                         <DropdownMenuSeparator />
                         <DropdownMenuGroup>
                           <DropdownMenuItem>
-                            <HugeiconsIcon icon={ShieldIcon} strokeWidth={2} />
+                            <HugeiconsIcon icon={ShieldIcon} strokeWidth={1.5} />
                             Privacy & Security
                           </DropdownMenuItem>
                         </DropdownMenuGroup>
@@ -377,18 +377,18 @@ function FormExample() {
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={HelpCircleIcon} strokeWidth={1.5} />
                     Help & Support
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <HugeiconsIcon icon={File01Icon} strokeWidth={2} />
+                    <HugeiconsIcon icon={File01Icon} strokeWidth={1.5} />
                     Documentation
                   </DropdownMenuItem>
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
                   <DropdownMenuItem variant="destructive">
-                    <HugeiconsIcon icon={LogoutIcon} strokeWidth={2} />
+                    <HugeiconsIcon icon={LogoutIcon} strokeWidth={1.5} />
                     Sign Out
                     <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
                   </DropdownMenuItem>

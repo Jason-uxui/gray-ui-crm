@@ -36,7 +36,7 @@ function Example({
       {...props}
     >
       {title && (
-        <div className="text-muted-foreground px-1.5 py-2 text-xs font-medium">
+        <div className="text-muted-foreground px-1.5 py-2 text-sm font-medium">
           {title}
         </div>
       )}
