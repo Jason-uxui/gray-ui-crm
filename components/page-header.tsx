@@ -1,7 +1,5 @@
 import * as React from "react"
 
-import { Separator } from "@/components/ui/separator"
-
 type PageHeaderProps = {
   title: string
   description?: string
@@ -9,7 +7,7 @@ type PageHeaderProps = {
 
 export function PageHeader({ title, description }: PageHeaderProps) {
   return (
-    <div className="space-y-0 p-3 border-b">
+    <div className="shrink-0 space-y-0 border-b p-3">
       <div>
         <h1 className="text-2xl font-semibold tracking-[-0.15px]">{title}</h1>
         {description ? (

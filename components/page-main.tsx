@@ -8,11 +8,10 @@ export function PageMain({ className, ...props }: PageMainProps) {
   return (
     <div
       className={cn(
-        "flex flex-col gap-0 m-2 rounded-md border border-border bg-background h-full",
+        "m-2 flex min-h-0 flex-1 flex-col gap-0 overflow-hidden rounded-md border border-border bg-background",
         className
       )}
       {...props}
     />
   )
 }
-
