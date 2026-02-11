@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 export default function WorkflowsPage() {
   return (
     <PageMain className="flex flex-col gap-0">
-      <PageHeader title="Workflows" description="This section is coming soon." />
+      <PageHeader breadcrumbs={[{ label: "Workflows" }]} />
       <PageContent>
         <PageInset>
           <Card>

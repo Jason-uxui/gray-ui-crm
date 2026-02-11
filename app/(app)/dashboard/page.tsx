@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 export default function DashboardPage() {
   return (
     <PageMain className="flex flex-col gap-0">
-      <PageHeader title="Dashboard" description="This section is coming soon." />
+      <PageHeader breadcrumbs={[{ label: "Dashboard" }]} />
       <PageContent>
         <PageInset>
           <Card>

@@ -45,7 +45,7 @@ const workspaces: NavItem[] = [
 
 export function Sidebar() {
   return (
-    <div className="flex h-full flex-col gap-2 p-2 text-sidebar-foreground">
+    <div className="flex h-full flex-col gap-2 p-2 py-3 text-sidebar-foreground">
       <div className="flex items-center justify-between gap-2">
         <WorkspaceSwitcher />
         <SearchButton />

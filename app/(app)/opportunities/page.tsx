@@ -9,7 +9,7 @@ import { Card, CardContent } from "@/components/ui/card"
 export default function OpportunitiesPage() {
   return (
     <PageMain className="flex flex-col gap-0">
-      <PageHeader title="Opportunities" description="This section is coming soon." />
+      <PageHeader breadcrumbs={[{ label: "Opportunities" }]} />
       <PageContent>
         <PageInset>
           <Card>
