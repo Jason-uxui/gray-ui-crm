@@ -72,6 +72,7 @@
   --chart-4: oklch(0.488 0.243 264.376);
   --chart-5: oklch(0.424 0.199 265.638);
   --radius: 0.625rem;
+  --tracking-ui: -0.15px; /* only used in globals.css */
   --sidebar: #f7f7f4;
   --sidebar-foreground: #26251e;
   --sidebar-primary: #26251e;
@@ -122,6 +123,6 @@
   }
   body {
     @apply bg-background text-foreground text-sm;
-    letter-spacing: -0.15px;
+    letter-spacing: var(--tracking-ui);
   }
 }
