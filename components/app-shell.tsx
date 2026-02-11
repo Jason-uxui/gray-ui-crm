@@ -4,7 +4,7 @@ import { Sidebar } from "@/components/sidebar"
 
 export function AppShell({ children }: { children: React.ReactNode }) {
   return (
-    <div className="min-h-screen bg-background text-foreground">
+    <div className="min-h-screen bg-muted text-foreground">
       <div className="flex min-h-screen">
         <aside className="w-52 border-border bg-sidebar">
           <Sidebar />
