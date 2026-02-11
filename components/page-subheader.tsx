@@ -5,5 +5,5 @@ type PageSubheaderProps = {
 }
 
 export function PageSubheader({ children }: PageSubheaderProps) {
-  return <div className="flex flex-wrap items-center gap-2">{children}</div>
+  return <div className="flex flex-wrap p-3 border-b items-center gap-2">{children}</div>
 }

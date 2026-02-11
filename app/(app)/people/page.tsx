@@ -3,6 +3,8 @@ import * as React from "react"
 import { PageHeader } from "@/components/page-header"
 import { PageSubheader } from "@/components/page-subheader"
 import { TableList } from "@/components/table-list"
+import { PageContent } from "@/components/page-content"
+import { PageMain } from "@/components/page-main"
 import { Button } from "@/components/ui/button"
 
 const peopleRows = [
@@ -40,12 +42,14 @@ const peopleRows = [
 
 export default function PeoplePage() {
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <PageMain>
       <PageHeader title="People" description="All people in your workspace." />
       <PageSubheader>
         <Button variant="secondary">All People</Button>
       </PageSubheader>
-      <TableList rows={peopleRows} />
-    </div>
+      <PageContent>
+        <TableList rows={peopleRows} />
+      </PageContent>
+    </PageMain>
   )
 }
