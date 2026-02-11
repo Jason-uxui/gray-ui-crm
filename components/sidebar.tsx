@@ -29,7 +29,6 @@ type NavItem = {
 }
 
 const quickActions: NavItem[] = [
-  { label: "Search", icon: SearchIcon },
   { label: "AI Assistant", icon: SparklesIcon },
   { label: "Inbox", icon: InboxIcon },
 ]
@@ -47,7 +46,10 @@ const workspaces: NavItem[] = [
 export function Sidebar() {
   return (
     <div className="flex h-full flex-col gap-2 p-2 text-sidebar-foreground">
-      <WorkspaceSwitcher />
+      <div className="flex items-center justify-between gap-2">
+        <WorkspaceSwitcher />
+        <SearchButton />
+      </div>
 
       <nav className="flex flex-col gap-1">
         {quickActions.map((item) => (
@@ -117,18 +119,37 @@ function WorkspaceSwitcher() {
     <button
       type="button"
       className={cn(
-        "flex items-center gap-2 rounded-md px-1.5 py-2 text-sm font-semibold",
+        "flex w-fit cursor-pointer items-center gap-2 rounded-md px-1.5 py-2 text-sm font-semibold",
         "text-sidebar-foreground transition-colors hover:bg-sidebar-accent/60"
       )}
     >
       <span className="flex size-5 items-center justify-center rounded-md bg-sidebar-primary text-sidebar-primary-foreground">
-        <HugeiconsIcon icon={CommandIcon} strokeWidth={1.5} className="size-3.5" />
+        <HugeiconsIcon icon={CommandIcon} strokeWidth={1.5} className="size-3" />
       </span>
-      <span className="flex-1 text-left text-sm leading-5">Acme Inc</span>
+      <span className="text-left text-sm leading-5">Acme Inc</span>
       <HugeiconsIcon
         icon={ArrowDown01Icon}
         strokeWidth={1.5}
         className="size-4 text-muted-foreground"
+      />
+    </button>
+  )
+}
+
+function SearchButton() {
+  return (
+    <button
+      type="button"
+      className={cn(
+        "group flex cursor-pointer items-center justify-center rounded-md p-2 text-sidebar-foreground",
+        "transition-colors hover:bg-sidebar-accent/60"
+      )}
+      aria-label="Search"
+    >
+      <HugeiconsIcon
+        icon={SearchIcon}
+        strokeWidth={1.5}
+        className="size-4 text-muted-foreground transition-colors group-hover:text-sidebar-foreground"
       />
     </button>
   )
