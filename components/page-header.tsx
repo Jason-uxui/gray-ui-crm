@@ -5,6 +5,10 @@ type PageHeaderProps = {
   description?: string
 }
 
+/**
+ * Fixed page heading block (title + optional description).
+ * Keep this at the top of `PageMain`; body spacing belongs to `PageInset`.
+ */
 export function PageHeader({ title, description }: PageHeaderProps) {
   return (
     <div className="shrink-0 space-y-0 border-b p-3">

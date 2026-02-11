@@ -3,6 +3,7 @@ import * as React from "react"
 import { PageHeader } from "@/components/page-header"
 import { PageMain } from "@/components/page-main"
 import { PageContent } from "@/components/page-content"
+import { PageInset } from "@/components/page-inset"
 import { Card, CardContent } from "@/components/ui/card"
 
 export default function DashboardPage() {
@@ -10,13 +11,15 @@ export default function DashboardPage() {
     <PageMain className="flex flex-col gap-0">
       <PageHeader title="Dashboard" description="This section is coming soon." />
       <PageContent>
-        <Card>
-          <CardContent>
-            <p className="text-sm text-muted-foreground">
-              Add your first Dashboard view here.
-            </p>
-          </CardContent>
-        </Card>
+        <PageInset>
+          <Card>
+            <CardContent>
+              <p className="text-sm text-muted-foreground">
+                Add your first Dashboard view here.
+              </p>
+            </CardContent>
+          </Card>
+        </PageInset>
       </PageContent>
     </PageMain>
   )
