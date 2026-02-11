@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
+import { Checkbox } from "@/components/ui/checkbox"
 
 export type TableListRow = {
   name: string
@@ -26,7 +27,7 @@ export function TableList({ rows }: TableListProps) {
         <TableHeader>
           <TableRow>
             <TableHead className="w-[48px]">
-              <input type="checkbox" className="h-4 w-4" />
+              <Checkbox aria-label="Select all people" />
             </TableHead>
             <TableHead>Name</TableHead>
             <TableHead>Title</TableHead>
@@ -37,7 +38,7 @@ export function TableList({ rows }: TableListProps) {
           {rows.map((row) => (
             <TableRow key={row.email}>
               <TableCell>
-                <input type="checkbox" className="h-4 w-4" />
+                <Checkbox aria-label={`Select ${row.name}`} />
               </TableCell>
               <TableCell className="font-medium">{row.name}</TableCell>
               <TableCell>{row.title}</TableCell>
