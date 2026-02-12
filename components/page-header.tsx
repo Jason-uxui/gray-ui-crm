@@ -1,4 +1,5 @@
 import * as React from "react"
+import { HugeiconsIcon } from "@hugeicons/react"
 
 import {
   Breadcrumb,
@@ -12,6 +13,7 @@ import {
 type PageHeaderBreadcrumb = {
   label: string
   href?: string
+  icon?: React.ComponentProps<typeof HugeiconsIcon>["icon"]
 }
 
 type PageHeaderProps = {
@@ -49,16 +51,28 @@ export function PageHeader({
               <BreadcrumbList>
                 {breadcrumbItems.map((item, index) => {
                   const isLast = index === breadcrumbItems.length - 1
+                  const content = (
+                    <span className="inline-flex items-center gap-1.5 leading-none">
+                      {item.icon ? (
+                        <HugeiconsIcon
+                          icon={item.icon}
+                          strokeWidth={1.5}
+                          className="size-4 shrink-0 text-muted-foreground"
+                        />
+                      ) : null}
+                      <span className="leading-none">{item.label}</span>
+                    </span>
+                  )
 
                   return (
                     <React.Fragment key={`${item.label}-${index}`}>
                       <BreadcrumbItem>
                         {isLast ? (
-                          <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                          <BreadcrumbPage>{content}</BreadcrumbPage>
                         ) : item.href ? (
-                          <BreadcrumbLink href={item.href}>{item.label}</BreadcrumbLink>
+                          <BreadcrumbLink href={item.href}>{content}</BreadcrumbLink>
                         ) : (
-                          <span>{item.label}</span>
+                          content
                         )}
                       </BreadcrumbItem>
                       {!isLast ? <BreadcrumbSeparator /> : null}

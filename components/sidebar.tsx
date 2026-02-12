@@ -3,6 +3,7 @@
 import * as React from "react"
 
 import Link from "next/link"
+import { usePathname } from "next/navigation"
 import { HugeiconsIcon } from "@hugeicons/react"
 import {
   ArrowDown01Icon,
@@ -34,7 +35,7 @@ const quickActions: NavItem[] = [
 ]
 
 const workspaces: NavItem[] = [
-  { label: "People", href: "/people", active: true, icon: UserIcon },
+  { label: "People", href: "/people", icon: UserIcon },
   { label: "Companies", href: "/companies", icon: Building01Icon },
   { label: "Opportunities", href: "/opportunities", icon: Target01Icon },
   { label: "Tasks", href: "/tasks", icon: Task01Icon },
@@ -44,6 +45,18 @@ const workspaces: NavItem[] = [
 ]
 
 export function Sidebar() {
+  const pathname = usePathname()
+  const workspaceItems = React.useMemo(
+    () =>
+      workspaces.map((item) => {
+        if (!item.href) return item
+        const isActive =
+          pathname === item.href || pathname.startsWith(`${item.href}/`)
+        return { ...item, active: isActive }
+      }),
+    [pathname]
+  )
+
   return (
     <div className="flex h-full flex-col gap-2 p-2 py-3 text-sidebar-foreground">
       <div className="flex items-center justify-between gap-2">
@@ -62,7 +75,7 @@ export function Sidebar() {
           Workspaces
         </div>
         <nav className="flex flex-col gap-1">
-          {workspaces.map((item) => (
+          {workspaceItems.map((item) => (
             <SidebarItem key={item.label} item={item} />
           ))}
         </nav>
