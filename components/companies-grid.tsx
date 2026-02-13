@@ -29,6 +29,7 @@ import {
   Add01Icon,
   AmazonIcon,
   AppleIcon,
+  ArrowUpRight01Icon,
   Building01Icon,
   Calendar01Icon,
   DragDropVerticalIcon,
@@ -1218,7 +1219,7 @@ export function CompaniesGrid() {
                     data-col-index={colIndex}
                     tabIndex={isEditing ? -1 : 0}
                     className={cn(
-                      "h-8 overflow-hidden border-r px-2 py-0.5 whitespace-nowrap outline-none",
+                      "group/cell relative h-8 overflow-hidden border-r px-2 py-0.5 whitespace-nowrap outline-none",
                       "focus-visible:ring-ring/40 focus-visible:ring-2",
                       isEditable && "cursor-text",
                       draggingColumnId === column.id && "bg-muted/20"
@@ -1253,7 +1254,38 @@ export function CompaniesGrid() {
                         className="border-input focus-visible:ring-ring/30 h-7 w-full rounded-md border bg-background px-2 text-xs outline-none focus-visible:ring-2"
                       />
                     ) : (
-                      renderCell(row, column)
+                      <>
+                        <span
+                          aria-hidden
+                          className="pointer-events-none absolute inset-0 border border-transparent transition-colors duration-150 group-hover/cell:border-ring/30 group-focus-within/cell:border-ring/30"
+                        />
+                        <div className="min-w-0 pr-8">{renderCell(row, column)}</div>
+                        <div className="absolute top-1/2 right-1.5 -translate-y-1/2 opacity-0 pointer-events-none transition-all group-hover/cell:opacity-100 group-hover/cell:pointer-events-auto group-focus-within/cell:opacity-100 group-focus-within/cell:pointer-events-auto">
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="icon"
+                            aria-label={`Open details for ${row.name} ${column.label}`}
+                            title="Open drawer"
+                            className="text-muted-foreground border-ring/20 hover:text-foreground bg-muted hover:bg-muted hover:shadow-md/5 hover:border-ring/30"
+                            onPointerDown={(event) => {
+                              event.stopPropagation()
+                            }}
+                            onDoubleClick={(event) => {
+                              event.stopPropagation()
+                            }}
+                            onClick={(event) => {
+                              event.stopPropagation()
+                            }}
+                          >
+                            <HugeiconsIcon
+                              icon={ArrowUpRight01Icon}
+                              strokeWidth={1.5}
+                              className="size-4"
+                            />
+                          </Button>
+                        </div>
+                      </>
                     )}
                   </TableCell>
                 )
