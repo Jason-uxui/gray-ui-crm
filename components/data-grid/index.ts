@@ -2,6 +2,7 @@ export { DataGrid } from "@/components/data-grid/data-grid"
 
 export type {
   DataGridColumn,
+  DataGridDrawerPanelProps,
   DataGridFilterConfig,
   DataGridProps,
   DataGridRowBase,

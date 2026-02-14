@@ -3,27 +3,11 @@
 import * as React from "react"
 
 import {
-  AirbnbIcon,
-  AmazonIcon,
-  AppleIcon,
   Building01Icon,
   Calendar01Icon,
-  DropboxIcon,
-  FigmaIcon,
-  GithubIcon,
-  GitlabIcon,
-  GoogleIcon,
   Link01Icon,
   Linkedin01Icon,
   MapPinpoint01Icon,
-  MetaIcon,
-  MicrosoftIcon,
-  NotionIcon,
-  PaypalIcon,
-  ShopifyIcon,
-  SlackIcon,
-  SpotifyIcon,
-  StripeIcon,
   UserGroupIcon,
   UserIcon,
   UserMultipleIcon,
@@ -33,25 +17,23 @@ import { HugeiconsIcon } from "@hugeicons/react"
 import {
   DataGrid,
   type DataGridColumn,
+  type DataGridDrawerPanelProps,
   type DataGridFilterConfig,
   type DataGridSortConfig,
 } from "@/components/data-grid"
+import { CompanyDetailDrawer } from "@/components/companies/company-detail-drawer"
+import { getCompanyBrandPresentation } from "@/components/companies/company-brand"
+import {
+  COMPANY_RECORDS,
+  type CompanyRecord,
+  getCompanyAccountOwner,
+  getCompanyCreatedBy,
+  formatCompanyCreatedAt,
+  formatCompanyEmployeeCount,
+} from "@/lib/companies"
 import { cn } from "@/lib/utils"
 
-type CompanyRow = {
-  id: string
-  logo: string
-  logoIcon?: React.ComponentProps<typeof HugeiconsIcon>["icon"]
-  logoClassName: string
-  name: string
-  domain?: string
-  createdBy: string
-  accountOwner?: string
-  createdAtMinutes: number
-  employees?: number
-  linkedin?: string
-  address?: string
-}
+type CompanyRow = CompanyRecord
 
 type CompanyColumnId =
   | "name"
@@ -79,233 +61,6 @@ type SummaryStats = {
 }
 
 const numberFormatter = new Intl.NumberFormat("en-US")
-
-const INITIAL_COMPANY_ROWS: CompanyRow[] = [
-  {
-    id: "airbnb",
-    logo: "A",
-    logoIcon: AirbnbIcon,
-    logoClassName: "bg-rose-600 text-white",
-    name: "Airbnb",
-    domain: "airbnb.com",
-    createdBy: "System",
-    accountOwner: "Linh Tran",
-    createdAtMinutes: 3,
-    employees: 6900,
-    linkedin: "linkedin.com/company/airbnb",
-    address: "888 Brannan St, San Francisco, CA",
-  },
-  {
-    id: "amazon",
-    logo: "A",
-    logoIcon: AmazonIcon,
-    logoClassName: "bg-orange-600 text-white",
-    name: "Amazon",
-    domain: "amazon.com",
-    createdBy: "System",
-    accountOwner: "Ngoc Tran",
-    createdAtMinutes: 8,
-    employees: 1525000,
-    linkedin: "linkedin.com/company/amazon",
-    address: "410 Terry Ave N, Seattle, WA",
-  },
-  {
-    id: "apple",
-    logo: "A",
-    logoIcon: AppleIcon,
-    logoClassName: "bg-zinc-900 text-white",
-    name: "Apple",
-    domain: "apple.com",
-    createdBy: "System",
-    accountOwner: "Hung Nguyen",
-    createdAtMinutes: 11,
-    employees: 161000,
-    linkedin: "linkedin.com/company/apple",
-    address: "One Apple Park Way, Cupertino, CA",
-  },
-  {
-    id: "dropbox",
-    logo: "D",
-    logoIcon: DropboxIcon,
-    logoClassName: "bg-blue-600 text-white",
-    name: "Dropbox",
-    domain: "dropbox.com",
-    createdBy: "Mai Le",
-    accountOwner: "Duc Nguyen",
-    createdAtMinutes: 54,
-    employees: 2600,
-    linkedin: "linkedin.com/company/dropbox",
-    address: "1800 Owens St, San Francisco, CA",
-  },
-  {
-    id: "figma",
-    logo: "F",
-    logoIcon: FigmaIcon,
-    logoClassName: "bg-zinc-900 text-white",
-    name: "Figma",
-    domain: "figma.com",
-    createdBy: "System",
-    accountOwner: "Duy Pham",
-    createdAtMinutes: 2,
-    employees: 1300,
-    linkedin: "linkedin.com/company/figma",
-    address: "760 Market St, Floor 10, San Francisco, CA",
-  },
-  {
-    id: "github",
-    logo: "G",
-    logoIcon: GithubIcon,
-    logoClassName: "bg-zinc-900 text-white",
-    name: "GitHub",
-    domain: "github.com",
-    createdBy: "System",
-    accountOwner: "Trang Vo",
-    createdAtMinutes: 19,
-    employees: 3500,
-    linkedin: "linkedin.com/company/github",
-    address: "88 Colin P Kelly Jr St, San Francisco, CA",
-  },
-  {
-    id: "gitlab",
-    logo: "G",
-    logoIcon: GitlabIcon,
-    logoClassName: "bg-amber-600 text-white",
-    name: "GitLab",
-    domain: "gitlab.com",
-    createdBy: "System",
-    accountOwner: "Lan Anh",
-    createdAtMinutes: 28,
-    employees: 2200,
-    linkedin: "linkedin.com/company/gitlab-com",
-    address: "268 Bush St, San Francisco, CA",
-  },
-  {
-    id: "google",
-    logo: "G",
-    logoIcon: GoogleIcon,
-    logoClassName: "bg-sky-600 text-white",
-    name: "Google",
-    domain: "google.com",
-    createdBy: "System",
-    accountOwner: "Phuong Le",
-    createdAtMinutes: 14,
-    employees: 182000,
-    linkedin: "linkedin.com/company/google",
-    address: "1600 Amphitheatre Pkwy, Mountain View, CA",
-  },
-  {
-    id: "meta",
-    logo: "M",
-    logoIcon: MetaIcon,
-    logoClassName: "bg-blue-600 text-white",
-    name: "Meta",
-    domain: "meta.com",
-    createdBy: "System",
-    accountOwner: "Kiet Pham",
-    createdAtMinutes: 24,
-    employees: 76000,
-    linkedin: "linkedin.com/company/meta",
-    address: "1 Hacker Way, Menlo Park, CA",
-  },
-  {
-    id: "microsoft",
-    logo: "M",
-    logoIcon: MicrosoftIcon,
-    logoClassName: "bg-emerald-600 text-white",
-    name: "Microsoft",
-    domain: "microsoft.com",
-    createdBy: "System",
-    accountOwner: "Linh Tran",
-    createdAtMinutes: 16,
-    employees: 221000,
-    linkedin: "linkedin.com/company/microsoft",
-    address: "One Microsoft Way, Redmond, WA",
-  },
-  {
-    id: "notion",
-    logo: "N",
-    logoIcon: NotionIcon,
-    logoClassName: "bg-zinc-900 text-white",
-    name: "Notion",
-    domain: "notion.com",
-    createdBy: "System",
-    accountOwner: "Ngoc Tran",
-    createdAtMinutes: 9,
-    employees: 1200,
-    linkedin: "linkedin.com/company/notionhq",
-    address: "2300 Harrison St, San Francisco, CA",
-  },
-  {
-    id: "paypal",
-    logo: "P",
-    logoIcon: PaypalIcon,
-    logoClassName: "bg-indigo-600 text-white",
-    name: "PayPal",
-    domain: "paypal.com",
-    createdBy: "Minh Nguyen",
-    accountOwner: "Lan Anh",
-    createdAtMinutes: 37,
-    employees: 29000,
-    linkedin: "linkedin.com/company/paypal",
-    address: "2211 N First St, San Jose, CA",
-  },
-  {
-    id: "shopify",
-    logo: "S",
-    logoIcon: ShopifyIcon,
-    logoClassName: "bg-lime-600 text-white",
-    name: "Shopify",
-    domain: "shopify.com",
-    createdBy: "Mai Le",
-    accountOwner: "Khanh Nguyen",
-    createdAtMinutes: 36,
-    employees: 8300,
-    linkedin: "linkedin.com/company/shopify",
-    address: "151 O'Connor St, Ottawa, ON",
-  },
-  {
-    id: "slack",
-    logo: "S",
-    logoIcon: SlackIcon,
-    logoClassName: "bg-fuchsia-600 text-white",
-    name: "Slack",
-    domain: "slack.com",
-    createdBy: "System",
-    accountOwner: "Hoang Le",
-    createdAtMinutes: 12,
-    employees: 3000,
-    linkedin: "linkedin.com/company/slack-technologies",
-    address: "500 Howard St, San Francisco, CA",
-  },
-  {
-    id: "spotify",
-    logo: "S",
-    logoIcon: SpotifyIcon,
-    logoClassName: "bg-green-600 text-white",
-    name: "Spotify",
-    domain: "spotify.com",
-    createdBy: "System",
-    accountOwner: "Bao Tran",
-    createdAtMinutes: 41,
-    employees: 10500,
-    linkedin: "linkedin.com/company/spotify",
-    address: "4 World Trade Center, New York, NY",
-  },
-  {
-    id: "stripe",
-    logo: "S",
-    logoIcon: StripeIcon,
-    logoClassName: "bg-indigo-600 text-white",
-    name: "Stripe",
-    domain: "stripe.com",
-    createdBy: "System",
-    accountOwner: "Thao Nguyen",
-    createdAtMinutes: 5,
-    employees: 10000,
-    linkedin: "linkedin.com/company/stripe",
-    address: "354 Oyster Point Blvd, South San Francisco, CA",
-  },
-]
 
 const companyColumns: CompanyColumn[] = [
   {
@@ -408,31 +163,23 @@ const sortConfig: DataGridSortConfig<SortPreset, CompanyRow> = {
   },
 }
 
-function formatCreatedAt(minutes: number) {
-  if (minutes <= 0) return "less than a minute ago"
-  if (minutes === 1) return "1 minute ago"
-  return `${minutes} minutes ago`
-}
-
-function formatEmployeeCount(value?: number) {
-  if (typeof value !== "number") return ""
-  return numberFormatter.format(value)
-}
-
 function isEditableColumn(columnId: CompanyColumnId) {
   return EDITABLE_COLUMN_IDS.includes(columnId)
 }
 
 function getCellEditValue(row: CompanyRow, columnId: CompanyColumnId) {
+  const createdBy = getCompanyCreatedBy(row)
+  const accountOwner = getCompanyAccountOwner(row)
+
   switch (columnId) {
     case "name":
       return row.name
     case "domain":
       return row.domain ?? ""
     case "createdBy":
-      return row.createdBy
+      return createdBy
     case "accountOwner":
-      return row.accountOwner ?? ""
+      return accountOwner ?? ""
     case "employees":
       return typeof row.employees === "number" ? String(row.employees) : ""
     case "linkedin":
@@ -453,9 +200,13 @@ function applyCellEdit(row: CompanyRow, columnId: CompanyColumnId, nextValue: st
     case "domain":
       return { ...row, domain: trimmedValue || undefined }
     case "createdBy":
-      return { ...row, createdBy: trimmedValue || row.createdBy }
+      return {
+        ...row,
+        createdBy: trimmedValue || getCompanyCreatedBy(row),
+        createdById: undefined,
+      }
     case "accountOwner":
-      return { ...row, accountOwner: trimmedValue || undefined }
+      return { ...row, accountOwner: trimmedValue || undefined, accountOwnerId: undefined }
     case "employees": {
       if (!trimmedValue) return { ...row, employees: undefined }
       const numericValue = Number(trimmedValue.replaceAll(",", ""))
@@ -483,20 +234,25 @@ function PersonCell({ value }: { value: string }) {
 }
 
 function renderCell(row: CompanyRow, column: DataGridColumn<CompanyColumnId>) {
+  const createdBy = getCompanyCreatedBy(row)
+  const accountOwner = getCompanyAccountOwner(row)
+
   switch (column.id) {
-    case "name":
+    case "name": {
+      const brand = getCompanyBrandPresentation(row.id, row.name)
+
       return (
         <div className="flex min-w-0 items-center gap-2">
           <span
             className={cn(
               "inline-flex size-5 shrink-0 items-center justify-center rounded-md text-[10px] font-semibold",
-              row.logoClassName
+              brand.className
             )}
           >
-            {row.logoIcon ? (
-              <HugeiconsIcon icon={row.logoIcon} strokeWidth={2} className="size-3.5" />
+            {brand.icon ? (
+              <HugeiconsIcon icon={brand.icon} strokeWidth={2} className="size-3.5" />
             ) : (
-              row.logo
+              brand.fallback
             )}
           </span>
           <span className={cn("truncate", row.id === "untitled" && "text-muted-foreground")}>
@@ -504,6 +260,7 @@ function renderCell(row: CompanyRow, column: DataGridColumn<CompanyColumnId>) {
           </span>
         </div>
       )
+    }
     case "domain":
       return row.domain ? (
         <span className="bg-muted/40 inline-flex h-6 items-center rounded-full border px-2 text-xs">
@@ -511,13 +268,13 @@ function renderCell(row: CompanyRow, column: DataGridColumn<CompanyColumnId>) {
         </span>
       ) : null
     case "createdBy":
-      return <PersonCell value={row.createdBy} />
+      return <PersonCell value={createdBy} />
     case "accountOwner":
-      return row.accountOwner ? <PersonCell value={row.accountOwner} /> : null
+      return accountOwner ? <PersonCell value={accountOwner} /> : null
     case "creationDate":
-      return <span className="text-muted-foreground block truncate">{formatCreatedAt(row.createdAtMinutes)}</span>
+      return <span className="text-muted-foreground block truncate">{formatCompanyCreatedAt(row.createdAtMinutes)}</span>
     case "employees":
-      return formatEmployeeCount(row.employees)
+      return formatCompanyEmployeeCount(row.employees)
     case "linkedin":
       return row.linkedin ?? null
     case "address":
@@ -528,19 +285,22 @@ function renderCell(row: CompanyRow, column: DataGridColumn<CompanyColumnId>) {
 }
 
 function getDrawerCellValue(row: CompanyRow, columnId: CompanyColumnId) {
+  const createdBy = getCompanyCreatedBy(row)
+  const accountOwner = getCompanyAccountOwner(row)
+
   switch (columnId) {
     case "name":
       return row.name
     case "domain":
       return row.domain ?? null
     case "createdBy":
-      return row.createdBy
+      return createdBy
     case "accountOwner":
-      return row.accountOwner ?? null
+      return accountOwner ?? null
     case "creationDate":
-      return formatCreatedAt(row.createdAtMinutes)
+      return formatCompanyCreatedAt(row.createdAtMinutes)
     case "employees":
-      return formatEmployeeCount(row.employees)
+      return formatCompanyEmployeeCount(row.employees)
     case "linkedin":
       return row.linkedin ?? null
     case "address":
@@ -582,10 +342,16 @@ function renderSummary(column: DataGridColumn<CompanyColumnId>, visibleRows: Com
   }
 }
 
+function renderCompanyDrawer(
+  props: DataGridDrawerPanelProps<CompanyRow, CompanyColumnId>
+) {
+  return <CompanyDetailDrawer {...props} />
+}
+
 export function CompaniesGrid() {
   return (
     <DataGrid<CompanyRow, CompanyColumnId, FilterPreset, SortPreset>
-      initialRows={INITIAL_COMPANY_ROWS}
+      initialRows={COMPANY_RECORDS}
       columns={companyColumns}
       viewLabel="All Companies"
       getRowLabel={(row) => row.name}
@@ -597,6 +363,7 @@ export function CompaniesGrid() {
       filter={filterConfig}
       sort={sortConfig}
       renderSummary={renderSummary}
+      renderDrawerPanel={renderCompanyDrawer}
       drawerModal={false}
       disablePointerDismissal={true}
     />

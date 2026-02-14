@@ -16,6 +16,17 @@ export type DataGridColumn<ColumnId extends string> = {
   minWidth?: number
 }
 
+export type DataGridDrawerPanelProps<Row, ColumnId extends string> = {
+  drawerRow: Row | null
+  drawerColumn: DataGridColumn<ColumnId> | null
+  drawerCellValue: React.ReactNode
+  getRowLabel: (row: Row) => string
+  isEditableColumn: (columnId: ColumnId) => boolean
+  isEmptyValue: (value: React.ReactNode) => boolean
+  updateRow: (rowId: string, updater: (row: Row) => Row) => void
+  closeDrawer: () => void
+}
+
 export type DataGridFilterConfig<
   FilterPreset extends string,
   Row extends DataGridRowBase,
@@ -51,6 +62,7 @@ export type DataGridProps<
   filter: DataGridFilterConfig<FilterPreset, Row>
   sort: DataGridSortConfig<SortPreset, Row>
   renderSummary?: (column: DataGridColumn<ColumnId>, visibleRows: Row[]) => React.ReactNode
+  renderDrawerPanel?: (props: DataGridDrawerPanelProps<Row, ColumnId>) => React.ReactNode
   drawerModal?: boolean
   disablePointerDismissal?: boolean
   onRowsChange?: (rows: Row[]) => void

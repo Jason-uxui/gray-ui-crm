@@ -22,11 +22,13 @@ import { useGridEditing } from "@/components/data-grid/use-grid-editing"
 import {
   type DataGridProps,
   type DataGridRowBase,
+  type DataGridDrawerPanelProps,
   type EditingCell,
 } from "@/components/data-grid/types"
 
 export type {
   DataGridColumn,
+  DataGridDrawerPanelProps,
   DataGridFilterConfig,
   DataGridProps,
   DataGridRowBase,
@@ -60,6 +62,7 @@ export function DataGrid<
   filter,
   sort,
   renderSummary,
+  renderDrawerPanel,
   drawerModal = false,
   disablePointerDismissal = true,
   onRowsChange,
@@ -153,13 +156,37 @@ export function DataGrid<
     commitRows,
   })
 
+  const closeDrawer = React.useCallback(() => {
+    setDrawerCell(null)
+  }, [])
+
+  const updateRow = React.useCallback(
+    (rowId: string, updater: (row: Row) => Row) => {
+      commitRows((currentRows) => {
+        return currentRows.map((row) => (row.id === rowId ? updater(row) : row))
+      })
+    },
+    [commitRows]
+  )
+
+  const drawerPanelProps: DataGridDrawerPanelProps<Row, ColumnId> = {
+    drawerRow,
+    drawerColumn,
+    drawerCellValue,
+    getRowLabel,
+    isEditableColumn,
+    isEmptyValue,
+    updateRow,
+    closeDrawer,
+  }
+
   return (
     <DialogPrimitive.Root
       open={drawerCell !== null}
       modal={drawerModal}
       disablePointerDismissal={disablePointerDismissal}
       onOpenChange={(open) => {
-        if (!open) setDrawerCell(null)
+        if (!open) closeDrawer()
       }}
     >
       <div className="min-h-0" ref={gridRef}>
@@ -218,14 +245,18 @@ export function DataGrid<
         />
       </div>
 
-      <DrawerPanel
-        drawerRow={drawerRow}
-        drawerColumn={drawerColumn}
-        drawerCellValue={drawerCellValue}
-        getRowLabel={getRowLabel}
-        isEditableColumn={isEditableColumn}
-        isEmptyValue={isEmptyValue}
-      />
+      {renderDrawerPanel ? (
+        renderDrawerPanel(drawerPanelProps)
+      ) : (
+        <DrawerPanel
+          drawerRow={drawerRow}
+          drawerColumn={drawerColumn}
+          drawerCellValue={drawerCellValue}
+          getRowLabel={getRowLabel}
+          isEditableColumn={isEditableColumn}
+          isEmptyValue={isEmptyValue}
+        />
+      )}
     </DialogPrimitive.Root>
   )
 }
