@@ -35,13 +35,13 @@ const quickActions: NavItem[] = [
 ]
 
 const workspaces: NavItem[] = [
-  { label: "People", href: "/people", icon: UserIcon },
+  { label: "People", icon: UserIcon },
   { label: "Companies", href: "/companies", icon: Building01Icon },
-  { label: "Opportunities", href: "/opportunities", icon: Target01Icon },
-  { label: "Tasks", href: "/tasks", icon: Task01Icon },
-  { label: "Notes", href: "/notes", icon: File01Icon },
-  { label: "Workflows", href: "/workflows", icon: WorkflowCircle01Icon },
-  { label: "Dashboard", href: "/dashboard", icon: LayoutIcon },
+  { label: "Opportunities", icon: Target01Icon },
+  { label: "Tasks", icon: Task01Icon },
+  { label: "Notes", icon: File01Icon },
+  { label: "Workflows", icon: WorkflowCircle01Icon },
+  { label: "Dashboard", icon: LayoutIcon },
 ]
 
 export function Sidebar() {
