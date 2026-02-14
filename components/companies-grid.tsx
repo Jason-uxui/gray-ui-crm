@@ -32,6 +32,7 @@ import {
   ArrowUpRight01Icon,
   Building01Icon,
   Calendar01Icon,
+  Cancel01Icon,
   DragDropVerticalIcon,
   DropboxIcon,
   FigmaIcon,
@@ -55,6 +56,7 @@ import {
   UserMultipleIcon,
 } from "@hugeicons/core-free-icons"
 import { HugeiconsIcon } from "@hugeicons/react"
+import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/ui/button"
@@ -713,6 +715,29 @@ function renderCell(row: CompanyRow, column: CompanyColumn) {
   }
 }
 
+function getDrawerCellValue(row: CompanyRow, columnId: CompanyColumnId) {
+  switch (columnId) {
+    case "name":
+      return row.name
+    case "domain":
+      return row.domain ?? null
+    case "createdBy":
+      return row.createdBy
+    case "accountOwner":
+      return row.accountOwner ?? null
+    case "creationDate":
+      return formatCreatedAt(row.createdAtMinutes)
+    case "employees":
+      return formatEmployeeCount(row.employees)
+    case "linkedin":
+      return row.linkedin ?? null
+    case "address":
+      return row.address ?? null
+    default:
+      return null
+  }
+}
+
 export function CompaniesGrid() {
   const [rows, setRows] = React.useState<CompanyRow[]>(INITIAL_COMPANY_ROWS)
   const [filterPreset, setFilterPreset] = React.useState<FilterPreset>("all")
@@ -734,6 +759,7 @@ export function CompaniesGrid() {
   } | null>(null)
   const [editingCell, setEditingCell] = React.useState<EditingCell | null>(null)
   const [draftValue, setDraftValue] = React.useState("")
+  const [drawerCell, setDrawerCell] = React.useState<EditingCell | null>(null)
 
   const gridRef = React.useRef<HTMLDivElement>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -833,6 +859,21 @@ export function CompaniesGrid() {
       return a.createdAtMinutes - b.createdAtMinutes || a.name.localeCompare(b.name)
     })
   }, [rows, filterPreset, sortPreset])
+
+  const drawerRow = React.useMemo(() => {
+    if (!drawerCell) return null
+    return rows.find((row) => row.id === drawerCell.rowId) ?? null
+  }, [drawerCell, rows])
+
+  const drawerColumn = React.useMemo(() => {
+    if (!drawerCell) return null
+    return companyColumns.find((column) => column.id === drawerCell.columnId) ?? null
+  }, [drawerCell])
+
+  const drawerCellValue = React.useMemo(() => {
+    if (!drawerCell || !drawerRow) return null
+    return getDrawerCellValue(drawerRow, drawerCell.columnId)
+  }, [drawerCell, drawerRow])
 
   const summaryStats = React.useMemo<SummaryStats>(() => {
     const countAll = visibleRows.length
@@ -1033,8 +1074,14 @@ export function CompaniesGrid() {
   }, [draggingColumnId])
 
   return (
-    <div className="min-h-0" ref={gridRef}>
-      <div className="flex items-center justify-between border-b px-2 py-1.5">
+    <DialogPrimitive.Root
+      open={drawerCell !== null}
+      onOpenChange={(open) => {
+        if (!open) setDrawerCell(null)
+      }}
+    >
+      <div className="min-h-0" ref={gridRef}>
+        <div className="flex items-center justify-between border-b px-2 py-1.5">
         <Button variant="ghost" className="-ml-1 text-muted-foreground">
           <HugeiconsIcon
             icon={Menu11Icon}
@@ -1149,58 +1196,58 @@ export function CompaniesGrid() {
         </div>
       </div>
 
-      <DndContext
-        sensors={sensors}
-        collisionDetection={closestCenter}
-        onDragStart={handleColumnDragStart}
-        onDragOver={handleColumnDragOver}
-        onDragEnd={handleColumnDragEnd}
-        onDragCancel={handleColumnDragCancel}
-      >
-        <Table
-          ref={tableRef}
-          className="table-fixed"
-          style={{ width: `max(100%, ${gridMinWidth}px)` }}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragStart={handleColumnDragStart}
+          onDragOver={handleColumnDragOver}
+          onDragEnd={handleColumnDragEnd}
+          onDragCancel={handleColumnDragCancel}
         >
-          <colgroup>
-            <col style={{ width: CONTROL_COLUMN_WIDTH }} />
-            {visibleColumns.map((column) => (
-              <col key={`col-${column.id}`} style={{ width: columnWidths[column.id] }} />
-            ))}
-            <col style={{ width: CONTROL_COLUMN_WIDTH }} />
-            <col />
-          </colgroup>
-          <TableHeader>
-            <TableRow className="hover:bg-transparent">
-              <TableHead className="h-8 w-10 border-r px-0 text-center">
-                <Checkbox className="mx-auto" aria-label="Select all companies" />
-              </TableHead>
-              <SortableContext
-                items={visibleColumns.map((column) => column.id)}
-                strategy={horizontalListSortingStrategy}
-              >
-                {visibleColumns.map((column) => (
-                  <SortableHeaderCell
-                    key={column.id}
-                    column={column}
-                    width={columnWidths[column.id]}
-                    isActive={draggingColumnId === column.id}
-                    isDropTarget={
-                      dragOverColumnId === column.id &&
-                      Boolean(draggingColumnId) &&
-                      draggingColumnId !== column.id
-                    }
-                    onResize={beginResize}
-                  />
-                ))}
-              </SortableContext>
-              <TableHead className="h-8 w-10 px-2 text-center text-xs">
-                <HugeiconsIcon icon={Add01Icon} strokeWidth={1.5} className="mx-auto size-4" />
-              </TableHead>
-              <TableHead className="h-8 p-0" />
-            </TableRow>
-          </TableHeader>
-        <TableBody>
+          <Table
+            ref={tableRef}
+            className="table-fixed"
+            style={{ width: `max(100%, ${gridMinWidth}px)` }}
+          >
+            <colgroup>
+              <col style={{ width: CONTROL_COLUMN_WIDTH }} />
+              {visibleColumns.map((column) => (
+                <col key={`col-${column.id}`} style={{ width: columnWidths[column.id] }} />
+              ))}
+              <col style={{ width: CONTROL_COLUMN_WIDTH }} />
+              <col />
+            </colgroup>
+            <TableHeader>
+              <TableRow className="hover:bg-transparent">
+                <TableHead className="h-8 w-10 border-r px-0 text-center">
+                  <Checkbox className="mx-auto" aria-label="Select all companies" />
+                </TableHead>
+                <SortableContext
+                  items={visibleColumns.map((column) => column.id)}
+                  strategy={horizontalListSortingStrategy}
+                >
+                  {visibleColumns.map((column) => (
+                    <SortableHeaderCell
+                      key={column.id}
+                      column={column}
+                      width={columnWidths[column.id]}
+                      isActive={draggingColumnId === column.id}
+                      isDropTarget={
+                        dragOverColumnId === column.id &&
+                        Boolean(draggingColumnId) &&
+                        draggingColumnId !== column.id
+                      }
+                      onResize={beginResize}
+                    />
+                  ))}
+                </SortableContext>
+                <TableHead className="h-8 w-10 px-2 text-center text-xs">
+                  <HugeiconsIcon icon={Add01Icon} strokeWidth={1.5} className="mx-auto size-4" />
+                </TableHead>
+                <TableHead className="h-8 p-0" />
+              </TableRow>
+            </TableHeader>
+          <TableBody>
           {visibleRows.map((row, rowIndex) => (
             <TableRow key={row.id}>
               <TableCell className="h-8 border-r px-0 text-center">
@@ -1276,6 +1323,7 @@ export function CompaniesGrid() {
                             }}
                             onClick={(event) => {
                               event.stopPropagation()
+                              setDrawerCell({ rowId: row.id, columnId: column.id })
                             }}
                           >
                             <HugeiconsIcon
@@ -1294,72 +1342,127 @@ export function CompaniesGrid() {
               <TableCell className="h-8 p-0" />
             </TableRow>
           ))}
-        </TableBody>
-        {showSummaries ? (
-          <TableFooter className="bg-background font-normal border-b">
-            <TableRow className="hover:bg-transparent">
-              <TableCell className="h-8 border-r px-2 py-0.5" />
-              {visibleColumns.map((column) => (
-                <TableCell
-                  key={`summary-${column.id}`}
-                  className={cn(
-                    "h-8 border-r px-2 py-0.5 text-left text-xs text-muted-foreground whitespace-nowrap",
-                    draggingColumnId === column.id && "bg-muted/20"
-                  )}
-                  style={{
-                    width: columnWidths[column.id],
-                    minWidth: columnWidths[column.id],
-                  }}
-                >
-                  {hasSummary(column) ? (
-                    <span
-                      className={cn(
-                        column.id === "name" && "tracking-[0.06em] uppercase",
-                        "inline-block"
-                      )}
-                    >
-                      {renderSummary(column, summaryStats)}
-                    </span>
-                  ) : null}
-                </TableCell>
-              ))}
-              <TableCell className="h-8 px-2 py-0.5" />
-              <TableCell className="h-8 p-0" />
-            </TableRow>
-          </TableFooter>
-        ) : null}
-        </Table>
-        <DragOverlay>
-          {dragOverlayColumn ? (
-            <div
-              className="pointer-events-none rounded-md border border-border/70 bg-background/95 shadow-lg"
-              style={{
-                width: columnWidths[dragOverlayColumn.id],
-                height: dragOverlayHeight,
-              }}
-            >
-              <div className="flex h-8 items-center gap-1.5 border-b px-2 text-xs font-medium">
-                <HugeiconsIcon
-                  icon={dragOverlayColumn.icon}
-                  strokeWidth={1.5}
-                  className="size-3.5 text-muted-foreground"
-                />
-                <span className="truncate">{dragOverlayColumn.label}</span>
-              </div>
-            </div>
+          </TableBody>
+          {showSummaries ? (
+            <TableFooter className="bg-background font-normal border-b">
+              <TableRow className="hover:bg-transparent">
+                <TableCell className="h-8 border-r px-2 py-0.5" />
+                {visibleColumns.map((column) => (
+                  <TableCell
+                    key={`summary-${column.id}`}
+                    className={cn(
+                      "h-8 border-r px-2 py-0.5 text-left text-xs text-muted-foreground whitespace-nowrap",
+                      draggingColumnId === column.id && "bg-muted/20"
+                    )}
+                    style={{
+                      width: columnWidths[column.id],
+                      minWidth: columnWidths[column.id],
+                    }}
+                  >
+                    {hasSummary(column) ? (
+                      <span
+                        className={cn(
+                          column.id === "name" && "tracking-[0.06em] uppercase",
+                          "inline-block"
+                        )}
+                      >
+                        {renderSummary(column, summaryStats)}
+                      </span>
+                    ) : null}
+                  </TableCell>
+                ))}
+                <TableCell className="h-8 px-2 py-0.5" />
+                <TableCell className="h-8 p-0" />
+              </TableRow>
+            </TableFooter>
           ) : null}
-        </DragOverlay>
-      </DndContext>
-      {dropIndicatorLeft !== null && dragTableRect ? (
-        <div
-          className="pointer-events-none fixed z-50 w-0.5 bg-muted-foreground/50"
-          style={{
-            left: dropIndicatorLeft - 1,
-            top: dragTableRect.top,
-            height: dragTableRect.height,
-          }}
-        />
-      ) : null}
-    </div>
+          </Table>
+          <DragOverlay>
+            {dragOverlayColumn ? (
+              <div
+                className="pointer-events-none rounded-md border border-border/70 bg-background/95 shadow-lg"
+                style={{
+                  width: columnWidths[dragOverlayColumn.id],
+                  height: dragOverlayHeight,
+                }}
+              >
+                <div className="flex h-8 items-center gap-1.5 border-b px-2 text-xs font-medium">
+                  <HugeiconsIcon
+                    icon={dragOverlayColumn.icon}
+                    strokeWidth={1.5}
+                    className="size-3.5 text-muted-foreground"
+                  />
+                  <span className="truncate">{dragOverlayColumn.label}</span>
+                </div>
+              </div>
+            ) : null}
+          </DragOverlay>
+        </DndContext>
+        {dropIndicatorLeft !== null && dragTableRect ? (
+          <div
+            className="pointer-events-none fixed z-50 w-0.5 bg-muted-foreground/50"
+            style={{
+              left: dropIndicatorLeft - 1,
+              top: dragTableRect.top,
+              height: dragTableRect.height,
+            }}
+          />
+        ) : null}
+      </div>
+
+      <DialogPrimitive.Portal>
+        <DialogPrimitive.Backdrop className="data-open:animate-in data-closed:animate-out data-closed:fade-out-0 data-open:fade-in-0 fixed inset-0 z-40 bg-black/25 duration-150" />
+        <DialogPrimitive.Popup className="translate-x-full data-open:translate-x-0 data-closed:translate-x-full fixed top-0 right-0 z-50 flex h-dvh w-full max-w-md flex-col border-l bg-background shadow-xl ring-foreground/10 ring-1 outline-none transition-transform duration-200">
+          <div className="flex items-center justify-between gap-3 border-b px-4 py-3">
+            <div className="min-w-0">
+              <DialogPrimitive.Title className="truncate text-sm font-medium">
+                {drawerRow?.name ?? "Company"} &middot; {drawerColumn?.label ?? "Details"}
+              </DialogPrimitive.Title>
+              <DialogPrimitive.Description className="text-muted-foreground text-xs">
+                Context panel for the selected cell.
+              </DialogPrimitive.Description>
+            </div>
+            <DialogPrimitive.Close
+              render={
+                <Button variant="ghost" size="icon-sm" className="-mr-1" aria-label="Close drawer" />
+              }
+            >
+              <HugeiconsIcon icon={Cancel01Icon} strokeWidth={1.5} className="size-4" />
+            </DialogPrimitive.Close>
+          </div>
+
+          <div className="flex-1 space-y-4 overflow-y-auto p-4">
+            <div className="bg-muted/30 rounded-lg border p-3">
+              <div className="text-muted-foreground text-xs">Cell value</div>
+              <p className="mt-1 break-words text-sm">
+                {drawerCellValue ? drawerCellValue : "Empty"}
+              </p>
+            </div>
+
+            <dl className="grid gap-3 text-sm">
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-muted-foreground">Company</dt>
+                <dd className="text-right font-medium">{drawerRow?.name ?? "-"}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-muted-foreground">Field</dt>
+                <dd className="text-right font-medium">{drawerColumn?.label ?? "-"}</dd>
+              </div>
+              <div className="flex items-center justify-between gap-3">
+                <dt className="text-muted-foreground">Editable</dt>
+                <dd className="text-right font-medium">
+                  {drawerColumn && isEditableColumn(drawerColumn.id) ? "Yes" : "No"}
+                </dd>
+              </div>
+            </dl>
+          </div>
+
+          <div className="flex items-center justify-end gap-2 border-t p-3">
+            <DialogPrimitive.Close render={<Button variant="outline">Close</Button>} />
+            <Button disabled>Open full drawer (coming soon)</Button>
+          </div>
+        </DialogPrimitive.Popup>
+      </DialogPrimitive.Portal>
+    </DialogPrimitive.Root>
   )
 }
