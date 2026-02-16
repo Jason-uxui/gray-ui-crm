@@ -71,6 +71,8 @@ export function DataGrid<
   const [sortPreset, setSortPreset] = React.useState<SortPreset>(sort.defaultPreset)
   const [showSummaries, setShowSummaries] = React.useState(true)
   const [drawerCell, setDrawerCell] = React.useState<EditingCell<ColumnId> | null>(null)
+  const reactInstanceId = React.useId()
+  const instanceId = React.useMemo(() => reactInstanceId.replace(/:/g, ""), [reactInstanceId])
 
   const gridRef = React.useRef<HTMLDivElement>(null)
   const inputRef = React.useRef<HTMLInputElement>(null)
@@ -207,6 +209,7 @@ export function DataGrid<
           visibleColumnIds={visibleColumnIds}
           hiddenColumns={hiddenColumns}
           toggleColumnVisibility={toggleColumnVisibility}
+          optionsDndContextId={`data-grid-options-${instanceId}`}
         />
 
         <DataGridTableView
@@ -242,6 +245,7 @@ export function DataGrid<
           dragOverlayHeight={dragOverlayHeight}
           dropIndicatorLeft={dropIndicatorLeft}
           dragTableRect={dragTableRect}
+          columnDndContextId={`data-grid-columns-${instanceId}`}
         />
       </div>
 

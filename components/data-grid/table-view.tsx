@@ -25,6 +25,7 @@ import {
 
 type DataGridTableViewProps<Row extends DataGridRowBase, ColumnId extends string> = {
   sensors: NonNullable<React.ComponentProps<typeof DndContext>["sensors"]>
+  columnDndContextId: string
   tableRef: React.RefObject<HTMLTableElement | null>
   gridMinWidth: number
   visibleColumns: DataGridColumn<ColumnId>[]
@@ -66,6 +67,7 @@ type DataGridTableViewProps<Row extends DataGridRowBase, ColumnId extends string
 
 export function DataGridTableView<Row extends DataGridRowBase, ColumnId extends string>({
   sensors,
+  columnDndContextId,
   tableRef,
   gridMinWidth,
   visibleColumns,
@@ -101,6 +103,7 @@ export function DataGridTableView<Row extends DataGridRowBase, ColumnId extends 
   return (
     <>
       <DndContext
+        id={columnDndContextId}
         sensors={sensors}
         collisionDetection={closestCenter}
         onDragStart={onColumnDragStart}

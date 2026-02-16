@@ -47,6 +47,7 @@ type DataGridToolbarProps<
   visibleColumnIds: ColumnId[]
   hiddenColumns: DataGridColumn<ColumnId>[]
   toggleColumnVisibility: (columnId: ColumnId, visible: boolean) => void
+  optionsDndContextId: string
 }
 
 const numberFormatter = new Intl.NumberFormat("en-US")
@@ -73,6 +74,7 @@ export function DataGridToolbar<
   visibleColumnIds,
   hiddenColumns,
   toggleColumnVisibility,
+  optionsDndContextId,
 }: DataGridToolbarProps<Row, ColumnId, FilterPreset, SortPreset>) {
   return (
     <div className="flex items-center justify-between border-b px-2 py-1.5">
@@ -176,6 +178,7 @@ export function DataGridToolbar<
               <DropdownMenuLabel>Columns</DropdownMenuLabel>
             </DropdownMenuGroup>
             <DndContext
+              id={optionsDndContextId}
               sensors={optionsSensors}
               collisionDetection={closestCenter}
               onDragEnd={onOptionColumnDragEnd}
