@@ -63,7 +63,7 @@
   --accent: #e6e5e0;
   --accent-foreground: #26251e;
   --destructive: oklch(0.58 0.22 27);
-  --border: #ebeae4;
+  --border: #d8d7d1;
   --input: #e4e4e1;
   --ring: #c08532;
   --chart-1: oklch(0.809 0.105 251.813);
@@ -124,5 +124,19 @@
   body {
     @apply bg-background text-foreground text-sm;
     letter-spacing: var(--tracking-ui);
+  }
+}
+
+@layer utilities {
+  .scrollbar-none {
+    -ms-overflow-style: none !important;
+    scrollbar-width: none !important;
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    display: none !important;
+    background: transparent !important;
   }
 }

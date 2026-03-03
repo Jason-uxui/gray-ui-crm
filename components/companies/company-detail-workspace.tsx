@@ -14,6 +14,7 @@ import { HugeiconsIcon } from "@hugeicons/react"
 
 import { getCompanyBrandPresentation } from "@/components/companies/company-brand"
 import { EntityPickerDropdown, type EntityPickerOption } from "@/components/companies/entity-picker-dropdown"
+import { CompanyTaskBoard } from "@/components/companies/tasks/company-task-board"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import {
@@ -40,6 +41,7 @@ import {
   getCompanyCreatedBy,
   getCompanyUpdatedBy,
 } from "@/lib/companies"
+import { useCompanyTaskSession } from "@/lib/company-task-session-store"
 import { OPPORTUNITY_OPTIONS, getOpportunityById } from "@/lib/opportunities"
 import { PEOPLE_OPTIONS, getPersonNameById } from "@/lib/people"
 import { cn } from "@/lib/utils"
@@ -82,13 +84,6 @@ type ActivityItem = {
     title: string
     comments: ReviewThreadComment[]
   }
-}
-
-type TaskItem = {
-  id: string
-  title: string
-  due: string
-  priority: "High" | "Medium" | "Low"
 }
 
 type NoteItem = {
@@ -222,11 +217,6 @@ const timelineFilterOptions: { id: ActivityFilterId; label: string }[] = [
   { id: "email", label: "Emails" },
   { id: "note", label: "Notes" },
   { id: "workflow", label: "Workflows" },
-]
-
-const taskItems: TaskItem[] = [
-  { id: "t-1", title: "Prepare renewal proposal", due: "Tomorrow", priority: "High" },
-  { id: "t-2", title: "Confirm procurement workflow", due: "In 2 days", priority: "Medium" },
 ]
 
 const noteItems: NoteItem[] = [
@@ -602,49 +592,21 @@ function TimelineTab() {
   )
 }
 
-function TasksTab() {
-  if (taskItems.length === 0) {
-    return (
-      <EmptyWorkspaceState
-        title="No tasks yet"
-        description="Create tasks to keep this account moving forward."
-        primaryAction="Create task"
-        secondaryAction="Log activity"
-      />
-    )
-  }
-
+function TasksTab({
+  company,
+  tasks,
+  onTasksChange,
+}: {
+  company: CompanyRecord
+  tasks: ReturnType<typeof useCompanyTaskSession>["tasks"]
+  onTasksChange: ReturnType<typeof useCompanyTaskSession>["setTasks"]
+}) {
   return (
-    <div className="space-y-3">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="inline-flex items-center gap-1.5">
-            <HugeiconsIcon icon={TaskDone01Icon} strokeWidth={1.6} className="size-4" />
-            Open tasks
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-2 py-4">
-          {taskItems.map((task) => (
-            <div key={task.id} className="rounded-md border p-3">
-              <div className="flex items-center justify-between gap-3">
-                <div className="text-sm font-medium">{task.title}</div>
-                <Badge variant={task.priority === "High" ? "destructive" : "outline"}>{task.priority}</Badge>
-              </div>
-              <div className="text-muted-foreground mt-1 inline-flex items-center gap-1.5 text-sm">
-                <HugeiconsIcon icon={Calendar03Icon} strokeWidth={1.6} className="size-4" />
-                Due {task.due}
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
-
-      <div className="flex flex-wrap items-center gap-2 pt-1">
-        <Button variant="outline" size="sm">
-          Add task
-        </Button>
-      </div>
-    </div>
+    <CompanyTaskBoard
+      tasks={tasks}
+      onTasksChange={onTasksChange}
+      companyId={company.id}
+    />
   )
 }
 
@@ -1033,7 +995,6 @@ function CompanySidebar({
       <Card>
         <CardHeader className="pb-3">
           <CardTitle className="text-base">Ownership & profile</CardTitle>
-          <CardDescription>Maintain core account metadata for handoff and reporting.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-3 py-4">
           <div className="space-y-2">
@@ -1304,22 +1265,23 @@ export function CompanyDetailWorkspace({
   onCompanyChange: (updater: (current: CompanyRecord) => CompanyRecord) => void
 }) {
   const [activeTab, setActiveTab] = React.useState<WorkspaceTabId>("timeline")
+  const { tasks, setTasks } = useCompanyTaskSession(company)
 
   const tabCounts = React.useMemo<Record<WorkspaceTabId, number>>(
     () => ({
       timeline: timelineItems.length,
-      tasks: taskItems.length,
+      tasks: tasks.length,
       notes: noteItems.length,
       files: fileItems.length,
       emails: emailItems.length,
       calendar: calendarItems.length,
     }),
-    []
+    [tasks.length]
   )
 
   const renderActiveTab = () => {
     if (activeTab === "timeline") return <TimelineTab />
-    if (activeTab === "tasks") return <TasksTab />
+    if (activeTab === "tasks") return <TasksTab company={company} tasks={tasks} onTasksChange={setTasks} />
     if (activeTab === "notes") return <NotesTab />
     if (activeTab === "files") return <FilesTab />
     if (activeTab === "emails") return <EmailsTab />
@@ -1329,7 +1291,7 @@ export function CompanyDetailWorkspace({
 
   return (
     <div className="grid gap-4 xl:grid-cols-[360px_minmax(0,_1fr)] xl:items-start">
-      <aside className="min-w-0 xl:sticky xl:top-5 xl:max-h-[calc(100dvh-8.5rem)] xl:overflow-y-auto">
+      <aside className="scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden min-w-0 xl:sticky xl:top-5 xl:max-h-[calc(100dvh-8.5rem)] xl:overflow-y-auto">
         <CompanySidebar company={company} onCompanyChange={onCompanyChange} />
       </aside>
 

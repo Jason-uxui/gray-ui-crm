@@ -26,7 +26,7 @@ export function CompanyDetailPage({ company }: { company: CompanyRecord }) {
         ]}
       />
 
-      <PageContent className="p-4 md:p-5">
+      <PageContent className="scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-4 md:p-5">
         <CompanyDetailWorkspace
           company={companyState}
           onCompanyChange={(updater) => {

@@ -25,6 +25,7 @@ import {
   EntityPickerDropdown,
   type EntityPickerOption,
 } from "@/components/companies/entity-picker-dropdown"
+import { CompanyTaskBoard } from "@/components/companies/tasks/company-task-board"
 import { Badge } from "@/components/ui/badge"
 import { Button, buttonVariants } from "@/components/ui/button"
 import {
@@ -43,6 +44,7 @@ import {
   formatCompanyEmployeeCount,
   type CompanyRecord,
 } from "@/lib/companies"
+import { useCompanyTaskSession } from "@/lib/company-task-session-store"
 import { OPPORTUNITY_OPTIONS, getOpportunityById } from "@/lib/opportunities"
 import { PEOPLE_OPTIONS, getPersonNameById } from "@/lib/people"
 import { cn } from "@/lib/utils"
@@ -350,6 +352,7 @@ export function CompanyDetailDrawer({
   drawerColumn,
   updateRow,
 }: CompanyDetailDrawerProps) {
+  const { tasks, setTasks } = useCompanyTaskSession(drawerRow)
   const [activeTab, setActiveTab] = React.useState<DrawerTab>("home")
   const [editingField, setEditingField] = React.useState<TextEditableFieldId | null>(null)
   const [draftValue, setDraftValue] = React.useState("")
@@ -687,9 +690,16 @@ export function CompanyDetailDrawer({
                 }}
               />
             </>
+          ) : activeTab === "tasks" ? (
+            <div>
+              <CompanyTaskBoard
+                tasks={tasks}
+                onTasksChange={setTasks}
+                companyId={drawerRow.id}
+              />
+            </div>
           ) : (
             <div className="text-muted-foreground px-4 py-4 text-sm">
-              {activeTab === "tasks" && "No tasks yet. Add the first task from full detail page."}
               {activeTab === "notes" && "No notes yet. Add context notes from full detail page."}
               {activeTab === "files" && "No files attached to this company yet."}
             </div>
