@@ -31,6 +31,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Input } from "@/components/ui/input"
+import {
+  InputGroup,
+  InputGroupAddon,
+  InputGroupButton,
+  InputGroupInput,
+} from "@/components/ui/input-group"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import {
@@ -50,7 +56,7 @@ type WorkspaceTabId = "timeline" | "tasks" | "notes" | "files" | "emails" | "cal
 type ProfileFieldId = "domain" | "employees" | "linkedin" | "address"
 type TimelineGroup = "Upcoming" | "Today" | "Yesterday" | "This week" | "Earlier"
 type ActivityType = "status" | "meeting" | "email" | "note" | "workflow"
-type ActivityFilterId = "all" | ActivityType
+type ActivityFocus = "everything" | "conversations" | "meetings" | "emails" | "system"
 
 type EmailPreview = {
   subject: string
@@ -206,17 +212,153 @@ const timelineItems: ActivityItem[] = [
     group: "This week",
     time: "2 days ago",
   },
+  {
+    id: "a-6",
+    type: "meeting",
+    actor: "Melisa Pinto",
+    action: "hosted",
+    target: "Implementation kick-off",
+    summary: "10:30 AM to 11:15 AM · Ho Chi Minh City · Zoom",
+    group: "Today",
+    time: "5 hours ago",
+    participants: ["Melisa Pinto", "William Cooper", "Olivia Emmanuel", "Lara Kim"],
+    relatedLabel: "Zoom",
+    meetingChips: ["Kick-off", "Project scope"],
+  },
+  {
+    id: "a-7",
+    type: "email",
+    actor: "Brianna Clinton",
+    action: "sent a follow-up to",
+    target: "Security team",
+    summary: "Shared answers for SSO, audit logging, and data retention questions.",
+    group: "Today",
+    time: "7 hours ago",
+    relatedLabel: "Security Q&A",
+    emailPreview: {
+      subject: "Re: Security questionnaire clarifications",
+      from: "Brianna Clinton <brianna@timeless.io>",
+      to: "security@atlasglobal.com",
+      snippet:
+        "Attached the updated answers for SSO and audit logging. Let us know if your team needs a short walkthrough this week.",
+    },
+  },
+  {
+    id: "a-8",
+    type: "status",
+    actor: "William Cooper",
+    action: "updated milestone in",
+    target: "Onboarding plan",
+    summary: "Pilot timeline confirmed with IT team and procurement.",
+    group: "Yesterday",
+    time: "Yesterday · 09:40",
+  },
+  {
+    id: "a-9",
+    type: "note",
+    actor: "Olivia Emmanuel",
+    action: "added a note",
+    target: "Contract redline summary",
+    summary: "Legal asked for explicit language on data residency and sub-processor notice.",
+    group: "This week",
+    time: "4 days ago",
+    reviewThread: {
+      title: "Procurement thread",
+      comments: [
+        {
+          id: "rt-3",
+          author: "Olivia Emmanuel",
+          role: "Legal",
+          body: "Please include fallback SLA language for incident response in the draft.",
+          time: "4 days ago",
+        },
+        {
+          id: "rt-4",
+          author: "Yuri Santos",
+          role: "Account manager",
+          body: "Noted. We will add it and send a clean redline before noon tomorrow.",
+          time: "3 days ago",
+        },
+        {
+          id: "rt-5",
+          author: "Melisa Pinto",
+          role: "Customer success",
+          body: "Also confirm if notice window can be reduced from 30 to 15 days.",
+          time: "3 days ago",
+        },
+      ],
+    },
+  },
+  {
+    id: "a-10",
+    type: "workflow",
+    actor: "RevOps automation",
+    action: "generated",
+    target: "Renewal risk digest",
+    summary: "Detected two open dependencies: security review and billing entity verification.",
+    group: "This week",
+    time: "5 days ago",
+  },
+  {
+    id: "a-11",
+    type: "meeting",
+    actor: "Sonny Lee",
+    action: "scheduled",
+    target: "Stakeholder alignment call",
+    summary: "Monday · 2:00 PM to 2:45 PM · Google Meet",
+    group: "Earlier",
+    time: "8 days ago",
+    participants: ["Sonny Lee", "Brianna Clinton", "Lara Kim", "William Cooper", "Alex Kim"],
+    relatedLabel: "Google Meet",
+    meetingChips: ["Stakeholders", "Roadmap"],
+  },
+  {
+    id: "a-12",
+    type: "email",
+    actor: "Lara Kim",
+    action: "replied to",
+    target: "Procurement committee",
+    summary: "Confirmed pricing guardrails and invoicing cadence for annual contract.",
+    group: "Earlier",
+    time: "10 days ago",
+    relatedLabel: "Commercial terms",
+    emailPreview: {
+      subject: "Re: Annual agreement commercial terms",
+      from: "Lara Kim <lara@timeless.io>",
+      to: "procurement@atlasglobal.com",
+      snippet:
+        "We can align on annual invoicing with net 30 terms. Sharing an updated quote with itemized onboarding services.",
+    },
+  },
+  {
+    id: "a-13",
+    type: "status",
+    actor: "Monty Hayton",
+    action: "moved deal stage to",
+    target: "Final review",
+    summary: "All approvers identified and timeline confirmed for final sign-off.",
+    group: "Earlier",
+    time: "12 days ago",
+  },
+  {
+    id: "a-14",
+    type: "workflow",
+    actor: "Ops workflow",
+    action: "synced",
+    target: "CRM and billing contacts",
+    summary: "Found 3 duplicate contacts and merged records automatically.",
+    group: "Earlier",
+    time: "14 days ago",
+  },
 ]
 
 const timelineGroupOrder: TimelineGroup[] = ["Upcoming", "Today", "Yesterday", "This week", "Earlier"]
-
-const timelineFilterOptions: { id: ActivityFilterId; label: string }[] = [
-  { id: "all", label: "All activities" },
-  { id: "status", label: "Status updates" },
-  { id: "meeting", label: "Meetings" },
-  { id: "email", label: "Emails" },
-  { id: "note", label: "Notes" },
-  { id: "workflow", label: "Workflows" },
+const activityFocusOptions: { id: ActivityFocus; label: string }[] = [
+  { id: "everything", label: "Everything" },
+  { id: "conversations", label: "Conversations" },
+  { id: "meetings", label: "Meetings" },
+  { id: "emails", label: "Emails" },
+  { id: "system", label: "System updates" },
 ]
 
 const noteItems: NoteItem[] = [
@@ -280,13 +422,25 @@ function getTimelineActivityIcon(type: ActivityType) {
   return SearchList01Icon
 }
 
-function getTimelineActivityToneClass(type: ActivityType) {
-  if (type === "meeting") return "border-sky-200 bg-sky-50 text-sky-700"
-  if (type === "status") return "border-emerald-200 bg-emerald-50 text-emerald-700"
-  if (type === "email") return "border-violet-200 bg-violet-50 text-violet-700"
-  if (type === "note") return "border-amber-200 bg-amber-50 text-amber-700"
-  if (type === "workflow") return "border-zinc-200 bg-zinc-100 text-zinc-700"
-  return "border-muted bg-muted text-muted-foreground"
+function getActivityNodeClass() {
+  return "bg-muted text-muted-foreground ring-border"
+}
+
+function flattenTimelineItems(groupOrder: TimelineGroup[], items: ActivityItem[]) {
+  return groupOrder.flatMap((group) => items.filter((item) => item.group === group))
+}
+
+function isLowSignal(item: ActivityItem) {
+  return item.type === "status" || item.type === "workflow"
+}
+
+function matchesFocus(item: ActivityItem, focus: ActivityFocus) {
+  if (focus === "everything") return true
+  if (focus === "conversations") return item.type === "note" || item.type === "status"
+  if (focus === "meetings") return item.type === "meeting"
+  if (focus === "emails") return item.type === "email"
+  if (focus === "system") return item.type === "workflow"
+  return true
 }
 
 function RelationToken({
@@ -369,229 +523,385 @@ function ErrorWorkspaceState() {
 }
 
 function TimelineTab() {
-  const [searchQuery, setSearchQuery] = React.useState("")
-  const [activeFilter, setActiveFilter] = React.useState<ActivityFilterId>("all")
-  const [composerOpen, setComposerOpen] = React.useState(false)
+  const [activityDraft, setActivityDraft] = React.useState("")
+  const [showAllActivity, setShowAllActivity] = React.useState(true)
+  const [activityFocus, setActivityFocus] = React.useState<ActivityFocus>("everything")
+  const [expandedItemIds, setExpandedItemIds] = React.useState<Record<string, boolean>>({})
+  const [expandedThreadIds, setExpandedThreadIds] = React.useState<Record<string, boolean>>({})
+  const [composerFormatting, setComposerFormatting] = React.useState({
+    bold: false,
+    italic: false,
+    underline: false,
+  })
+  const composerInputId = "timeline-activity-composer"
+  const flattenedActivities = React.useMemo(
+    () => flattenTimelineItems(timelineGroupOrder, timelineItems),
+    []
+  )
+  const visibleActivities = React.useMemo(
+    () =>
+      flattenedActivities
+        .filter((item) => matchesFocus(item, activityFocus))
+        .filter((item) => showAllActivity || !isLowSignal(item)),
+    [activityFocus, flattenedActivities, showAllActivity]
+  )
 
-  const filteredActivities = React.useMemo(() => {
-    const query = searchQuery.trim().toLowerCase()
-
-    return timelineItems.filter((item) => {
-      const matchesFilter = activeFilter === "all" || item.type === activeFilter
-      const matchesQuery =
-        query.length === 0 ||
-        `${item.actor} ${item.action} ${item.target} ${item.summary ?? ""} ${item.relatedLabel ?? ""} ${item.meetingChips?.join(" ") ?? ""} ${item.emailPreview?.subject ?? ""} ${item.emailPreview?.snippet ?? ""} ${item.emailPreview?.from ?? ""} ${item.emailPreview?.to ?? ""} ${item.reviewThread?.title ?? ""} ${(item.reviewThread?.comments ?? []).map((comment) => `${comment.author} ${comment.body}`).join(" ")}`
-          .toLowerCase()
-          .includes(query)
-
-      return matchesFilter && matchesQuery
-    })
-  }, [activeFilter, searchQuery])
-
-  const groupedActivities = React.useMemo<Record<TimelineGroup, ActivityItem[]>>(() => {
-    const grouped: Record<TimelineGroup, ActivityItem[]> = {
-      Upcoming: [],
-      Today: [],
-      Yesterday: [],
-      "This week": [],
-      Earlier: [],
-    }
-
-    filteredActivities.forEach((item) => {
-      grouped[item.group].push(item)
-    })
-
-    return grouped
-  }, [filteredActivities])
-
-  const activeFilterLabel =
-    timelineFilterOptions.find((option) => option.id === activeFilter)?.label ?? "All activities"
-
-  const visibleGroups = timelineGroupOrder.filter((group) => groupedActivities[group].length > 0)
+  const saveActivityDraft = () => {
+    if (!activityDraft.trim()) return
+    setActivityDraft("")
+  }
+  const hasFocusFilter = activityFocus !== "everything"
+  const emptyTitle = showAllActivity ? "No activity to display" : "No key activity"
+  const emptyDescription = showAllActivity
+    ? hasFocusFilter
+      ? "Try another activity focus to see more timeline events."
+      : "Start by adding your first activity update for this account."
+    : "Turn on show all activity to include low-signal and system updates."
 
   return (
-    <div className="space-y-3">
-      <Card>
-        <CardHeader className="pb-3">
-          <CardTitle className="inline-flex items-center gap-1.5">
-            <HugeiconsIcon icon={SearchList01Icon} strokeWidth={1.6} className="size-4" />
-            Timeline
-          </CardTitle>
-          <CardDescription>
-            Search and filter activity across meetings, emails, notes, and workflow updates.
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3 py-4">
-          <div className="flex flex-wrap items-center gap-2">
-            <Input
-              value={searchQuery}
-              onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search activity"
-              className="h-9 min-w-[220px] flex-1"
-            />
-            <DropdownMenu>
-              <DropdownMenuTrigger
-                render={<Button variant="outline" size="sm" className="h-9" aria-label="Filter activity" />}
-              >
-                {activeFilterLabel}
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                {timelineFilterOptions.map((option) => (
-                  <DropdownMenuItem key={option.id} onClick={() => setActiveFilter(option.id)}>
-                    {option.label}
-                  </DropdownMenuItem>
-                ))}
-              </DropdownMenuContent>
-            </DropdownMenu>
-            <Button size="sm" className="h-9" onClick={() => setComposerOpen((open) => !open)}>
-              {composerOpen ? "Close composer" : "Log new activity"}
-            </Button>
-          </div>
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center justify-between gap-2">
+        <h3 className="text-base font-semibold">Activity Log</h3>
+        <div className="flex items-center gap-1">
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="h-7 rounded-full px-2"
+            aria-label="Toggle show all activity"
+            aria-pressed={showAllActivity}
+            onClick={() => setShowAllActivity((current) => !current)}
+          >
+            <span className="text-muted-foreground text-xs">Show all activity</span>
+            <span
+              className={cn(
+                "inline-flex h-4 w-7 items-center rounded-full border p-0.5 transition-colors",
+                showAllActivity ? "bg-primary/15 border-primary/30" : "bg-muted border-border"
+              )}
+            >
+              <span
+                className={cn(
+                  "inline-flex size-3 rounded-full bg-background shadow-xs transition-transform",
+                  showAllActivity ? "translate-x-3" : "translate-x-0"
+                )}
+              />
+            </span>
+          </Button>
+          <DropdownMenu>
+            <DropdownMenuTrigger
+              render={
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon-xs"
+                  className="size-7 rounded-full"
+                  aria-label="Activity focus filter"
+                />
+              }
+            >
+              <HugeiconsIcon icon={SearchList01Icon} strokeWidth={1.8} className="size-4" />
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-48">
+              {activityFocusOptions.map((option) => (
+                <DropdownMenuItem key={option.id} onClick={() => setActivityFocus(option.id)}>
+                  <span className="flex-1">{option.label}</span>
+                  {activityFocus === option.id ? (
+                    <span className="text-primary text-xs font-semibold">ON</span>
+                  ) : null}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
+      </div>
 
-          {composerOpen ? (
-            <div className="rounded-md border border-dashed p-3">
-              <Textarea placeholder="Write an update for this company..." rows={3} />
-              <div className="mt-3 flex flex-wrap items-center justify-between gap-2">
-                <div className="flex flex-wrap gap-2">
-                  <Button variant="outline" size="sm">
-                    Meeting
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Email
-                  </Button>
-                  <Button variant="outline" size="sm">
-                    Note
-                  </Button>
-                </div>
-                <Button size="sm">Save activity</Button>
-              </div>
+      <div className="space-y-2">
+        <InputGroup className="h-10 min-w-0 rounded-xl">
+          <InputGroupInput
+            id={composerInputId}
+            value={activityDraft}
+            onChange={(event) => setActivityDraft(event.target.value)}
+            placeholder="Comment or type '/' for comments"
+            className="h-10 text-sm"
+            aria-label="Activity composer"
+            onKeyDown={(event) => {
+              if (event.key === "Enter") {
+                event.preventDefault()
+                saveActivityDraft()
+              }
+            }}
+          />
+          <InputGroupAddon align="inline-end" className="gap-0.5 pr-1">
+            <InputGroupButton
+              variant="ghost"
+              size="icon-xs"
+              className="size-7 rounded-md text-sm"
+              aria-label="Mention teammate"
+            >
+              @
+            </InputGroupButton>
+            <InputGroupButton
+              variant={composerFormatting.bold ? "secondary" : "ghost"}
+              size="icon-xs"
+              className="size-7 rounded-md text-sm font-semibold"
+              aria-label="Toggle bold"
+              onClick={() =>
+                setComposerFormatting((current) => ({ ...current, bold: !current.bold }))
+              }
+            >
+              B
+            </InputGroupButton>
+            <InputGroupButton
+              variant={composerFormatting.italic ? "secondary" : "ghost"}
+              size="icon-xs"
+              className="size-7 rounded-md text-sm italic"
+              aria-label="Toggle italic"
+              onClick={() =>
+                setComposerFormatting((current) => ({ ...current, italic: !current.italic }))
+              }
+            >
+              I
+            </InputGroupButton>
+            <InputGroupButton
+              variant={composerFormatting.underline ? "secondary" : "ghost"}
+              size="icon-xs"
+              className="size-7 rounded-md text-sm underline"
+              aria-label="Toggle underline"
+              onClick={() =>
+                setComposerFormatting((current) => ({
+                  ...current,
+                  underline: !current.underline,
+                }))
+              }
+            >
+              U
+            </InputGroupButton>
+            <InputGroupButton
+              variant="ghost"
+              size="icon-xs"
+              className="size-7 rounded-md text-base leading-none"
+              aria-label="More composer actions"
+            >
+              ...
+            </InputGroupButton>
+          </InputGroupAddon>
+        </InputGroup>
+      </div>
+
+      {visibleActivities.length === 0 ? (
+        <Card className="border-dashed">
+          <CardContent className="flex flex-col items-start gap-3 py-6">
+            <Badge variant="outline">Empty</Badge>
+            <div>
+              <div className="text-sm font-medium">{emptyTitle}</div>
+              <div className="text-muted-foreground text-sm">{emptyDescription}</div>
             </div>
-          ) : null}
-        </CardContent>
-      </Card>
-
-      {visibleGroups.length === 0 ? (
-        <EmptyWorkspaceState
-          title="No matching activity"
-          description="Try another filter or log a fresh update for this account."
-          primaryAction="Log activity"
-          secondaryAction="Clear filters"
-        />
+            <div className="flex flex-wrap items-center gap-2">
+              <Button
+                variant="outline"
+                onClick={() => document.getElementById(composerInputId)?.focus()}
+              >
+                Log activity
+              </Button>
+              {(hasFocusFilter || !showAllActivity) ? (
+                <Button
+                  variant="ghost"
+                  onClick={() => {
+                    setShowAllActivity(true)
+                    setActivityFocus("everything")
+                  }}
+                >
+                  Reset view
+                </Button>
+              ) : null}
+            </div>
+          </CardContent>
+        </Card>
       ) : (
-        <Card>
-          <CardContent className="space-y-5 py-5">
-            {visibleGroups.map((group) => (
-              <section key={group} className="space-y-3">
-                <div className="text-muted-foreground text-xs font-semibold tracking-wide uppercase">{group}</div>
+        <div className="relative">
+          <div className="bg-border absolute top-2 bottom-2 left-2.5 w-px" />
+          <div className="space-y-4">
+            {visibleActivities.map((item) => {
+              const activityIcon = getTimelineActivityIcon(item.type)
+              const isExpanded = Boolean(expandedItemIds[item.id])
+              const isThreadExpanded = Boolean(expandedThreadIds[item.id])
+              const threadComments = item.reviewThread?.comments ?? []
+              const threadCommentsToRender = isThreadExpanded
+                ? threadComments
+                : threadComments.slice(0, 1)
+              const hiddenThreadCount = threadComments.length - threadCommentsToRender.length
+              const previewSnippet =
+                item.summary ?? item.emailPreview?.snippet ?? threadComments[0]?.body ?? ""
+              const hasExpandableContent = Boolean(
+                item.summary ||
+                  item.emailPreview ||
+                  item.reviewThread ||
+                  item.relatedLabel ||
+                  item.meetingChips?.length ||
+                  item.participants?.length
+              )
+              const visibleParticipants = item.participants?.slice(0, 3) ?? []
+              const remainingParticipants = (item.participants?.length ?? 0) - visibleParticipants.length
 
-                <div className="relative space-y-3">
-                  <div className="bg-border absolute top-2 bottom-2 left-4 w-px" />
+              return (
+                <article key={item.id} className="group relative pl-9">
+                  <span
+                    className={cn(
+                      "absolute top-1 left-0 inline-flex size-5 items-center justify-center rounded-full ring-1",
+                      getActivityNodeClass()
+                    )}
+                  >
+                    <HugeiconsIcon icon={activityIcon} strokeWidth={1.9} className="size-3" />
+                  </span>
 
-                  {groupedActivities[group].map((item) => {
-                    const activityIcon = getTimelineActivityIcon(item.type)
+                  <div className="space-y-1.5">
+                    <div className="flex flex-wrap items-start justify-between gap-2">
+                      <div className="min-w-0 text-sm leading-relaxed">
+                        <span className="font-medium">{item.actor}</span>{" "}
+                        <span className="text-muted-foreground">{item.action}</span>{" "}
+                        <span className="font-medium">{item.target}</span>
+                      </div>
+                      <div className="flex items-center gap-1">
+                        <span className="text-muted-foreground text-xs">{item.time}</span>
+                        <div className="flex items-center gap-1 opacity-0 transition-opacity duration-150 group-hover:opacity-100 group-focus-within:opacity-100">
+                          {(item.type === "note" || item.type === "email") ? (
+                            <Button variant="ghost" size="icon-xs" className="size-6" aria-label="Reply to activity">
+                              R
+                            </Button>
+                          ) : null}
+                          <Button variant="ghost" size="icon-xs" className="size-6" aria-label="More activity actions">
+                            ...
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
 
-                    return (
-                      <article key={item.id} className="relative pl-11">
-                        <span
-                          className={cn(
-                            "absolute top-1 left-0 inline-flex size-8 items-center justify-center rounded-full border",
-                            getTimelineActivityToneClass(item.type)
-                          )}
-                        >
-                          <HugeiconsIcon icon={activityIcon} strokeWidth={1.8} className="size-4" />
-                        </span>
+                    {previewSnippet ? (
+                      <p className="text-muted-foreground overflow-hidden text-sm [display:-webkit-box] [-webkit-box-orient:vertical] [-webkit-line-clamp:1]">
+                        {previewSnippet}
+                      </p>
+                    ) : null}
 
-                        <div className="rounded-md border p-3">
-                          <div className="flex flex-wrap items-start justify-between gap-2">
-                            <div className="text-sm leading-relaxed">
-                              <span className="font-medium">{item.actor}</span>{" "}
-                              <span className="text-muted-foreground">{item.action}</span>{" "}
-                              <span className="font-medium">{item.target}</span>
-                            </div>
-                            <span className="text-muted-foreground text-xs">{item.time}</span>
+                    {hasExpandableContent ? (
+                      <button
+                        type="button"
+                        className="text-primary text-xs font-medium hover:underline"
+                        onClick={() =>
+                          setExpandedItemIds((current) => ({
+                            ...current,
+                            [item.id]: !current[item.id],
+                          }))
+                        }
+                      >
+                        {isExpanded ? "Hide details" : "View details"}
+                      </button>
+                    ) : null}
+
+                    {isExpanded ? (
+                      <div className="space-y-2 rounded-xl border bg-background/80 p-3">
+                        {item.emailPreview ? (
+                          <div className="rounded-lg border bg-muted/20 p-3">
+                            <div className="text-sm font-medium">{item.emailPreview.subject}</div>
+                            <div className="text-muted-foreground mt-1 text-xs">From {item.emailPreview.from}</div>
+                            <div className="text-muted-foreground text-xs">To {item.emailPreview.to}</div>
+                            <div className="text-muted-foreground mt-2 text-sm">{item.emailPreview.snippet}</div>
                           </div>
+                        ) : null}
 
-                          {item.summary ? (
-                            <div className="text-muted-foreground mt-1 text-sm">{item.summary}</div>
+                        {!item.emailPreview && item.summary ? (
+                          <p className="text-muted-foreground text-sm leading-relaxed">{item.summary}</p>
+                        ) : null}
+
+                        {item.reviewThread ? (
+                          <div className="space-y-2 rounded-lg bg-muted/30 p-2.5">
+                            <div className="text-sm font-medium">{item.reviewThread.title}</div>
+                            {threadCommentsToRender.map((comment) => (
+                              <div key={comment.id} className="rounded-md border bg-background/90 p-2.5">
+                                <div className="flex flex-wrap items-center justify-between gap-2">
+                                  <div className="text-xs font-medium">
+                                    {comment.author} · <span className="text-muted-foreground">{comment.role}</span>
+                                  </div>
+                                  <span className="text-muted-foreground text-xs">{comment.time}</span>
+                                </div>
+                                <div className="text-muted-foreground mt-1 text-sm">{comment.body}</div>
+                              </div>
+                            ))}
+                            {threadComments.length > 1 ? (
+                              <button
+                                type="button"
+                                className="text-primary text-xs font-medium hover:underline"
+                                onClick={() =>
+                                  setExpandedThreadIds((current) => ({
+                                    ...current,
+                                    [item.id]: !current[item.id],
+                                  }))
+                                }
+                              >
+                                {isThreadExpanded
+                                  ? "Show fewer replies"
+                                  : `View ${hiddenThreadCount} more ${hiddenThreadCount === 1 ? "reply" : "replies"}`}
+                              </button>
+                            ) : null}
+                          </div>
+                        ) : null}
+
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Badge variant="outline" className="h-5 rounded-full px-2 capitalize">
+                            {item.type}
+                          </Badge>
+
+                          {item.relatedLabel ? (
+                            <span className="text-muted-foreground rounded-full border px-2 py-0.5 text-xs">
+                              {item.relatedLabel}
+                            </span>
                           ) : null}
 
                           {item.meetingChips?.length ? (
-                            <div className="mt-2 flex flex-wrap gap-1.5">
+                            <>
                               {item.meetingChips.map((chip) => (
-                                <Badge key={chip} variant="secondary" className="h-6 rounded-full px-2 text-[11px]">
+                                <Badge key={chip} variant="secondary" className="h-5 rounded-full px-2 text-[11px]">
                                   {chip}
                                 </Badge>
                               ))}
-                            </div>
+                            </>
                           ) : null}
 
-                          {item.emailPreview ? (
-                            <div className="mt-3 rounded-md border bg-muted/25 p-3">
-                              <div className="text-sm font-medium">{item.emailPreview.subject}</div>
-                              <div className="text-muted-foreground mt-1 text-xs">From {item.emailPreview.from}</div>
-                              <div className="text-muted-foreground text-xs">To {item.emailPreview.to}</div>
-                              <div className="text-muted-foreground mt-2 text-sm">{item.emailPreview.snippet}</div>
-                            </div>
-                          ) : null}
-
-                          {item.reviewThread ? (
-                            <div className="mt-3 space-y-2 rounded-md border bg-muted/25 p-3">
-                              <div className="text-sm font-medium">{item.reviewThread.title}</div>
-                              <div className="space-y-2">
-                                {item.reviewThread.comments.map((comment) => (
-                                  <div key={comment.id} className="rounded-md border bg-background/80 p-2.5">
-                                    <div className="flex flex-wrap items-center justify-between gap-2">
-                                      <div className="text-xs font-medium">
-                                        {comment.author} · <span className="text-muted-foreground">{comment.role}</span>
-                                      </div>
-                                      <span className="text-muted-foreground text-xs">{comment.time}</span>
-                                    </div>
-                                    <div className="text-muted-foreground mt-1 text-sm">{comment.body}</div>
-                                  </div>
-                                ))}
-                              </div>
-                            </div>
-                          ) : null}
-
-                          <div className="mt-2 flex flex-wrap items-center gap-2">
-                            <Badge variant="outline" className="capitalize">
-                              {item.type}
-                            </Badge>
-
-                            {item.relatedLabel ? (
-                              <span className="text-muted-foreground rounded-md border px-2 py-0.5 text-xs">
-                                {item.relatedLabel}
-                              </span>
-                            ) : null}
-
-                            {item.participants?.length ? (
-                              <div className="flex items-center gap-1.5">
-                                {item.participants.slice(0, 3).map((participant) => (
+                          {visibleParticipants.length > 0 ? (
+                            <div className="flex items-center gap-2">
+                              <div className="flex items-center">
+                                {visibleParticipants.map((participant, index) => (
                                   <span
                                     key={participant}
-                                    className="bg-muted text-muted-foreground inline-flex size-6 items-center justify-center rounded-full text-[10px] font-semibold"
+                                    className={cn(
+                                      "bg-muted text-muted-foreground inline-flex size-6 items-center justify-center rounded-full border text-[10px] font-semibold",
+                                      index > 0 && "-ml-1.5"
+                                    )}
                                     title={participant}
                                   >
                                     {getInitials(participant)}
                                   </span>
                                 ))}
                               </div>
-                            ) : null}
-                          </div>
+                              {remainingParticipants > 0 ? (
+                                <span className="text-muted-foreground text-xs">
+                                  and {remainingParticipants} others
+                                </span>
+                              ) : null}
+                            </div>
+                          ) : null}
                         </div>
-                      </article>
-                    )
-                  })}
-                </div>
-              </section>
-            ))}
-          </CardContent>
-        </Card>
+                      </div>
+                    ) : null}
+                  </div>
+                </article>
+              )
+            })}
+          </div>
+        </div>
       )}
     </div>
   )
 }
-
 function TasksTab({
   company,
   tasks,

@@ -52,15 +52,15 @@ export function PageHeader({
                 {breadcrumbItems.map((item, index) => {
                   const isLast = index === breadcrumbItems.length - 1
                   const content = (
-                    <span className="inline-flex items-center gap-1.5 leading-none">
+                    <span className="inline-flex items-center gap-1.5">
                       {item.icon ? (
                         <HugeiconsIcon
                           icon={item.icon}
                           strokeWidth={1.5}
-                          className="size-4 shrink-0 text-muted-foreground"
+                          className="size-4 shrink-0 self-center text-muted-foreground"
                         />
                       ) : null}
-                      <span className="leading-none">{item.label}</span>
+                      <span className="leading-5">{item.label}</span>
                     </span>
                   )
 
