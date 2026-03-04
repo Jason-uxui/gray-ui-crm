@@ -1,4 +1,0 @@
-interface:
-  display_name: "CRM Feature to shadcn Page"
-  short_description: "Implement CRM features into production-ready Next.js pages"
-  default_prompt: "Use $crm-feature-to-shadcn-page to implement this CRM feature as a production-ready Next.js page with shadcn/ui."

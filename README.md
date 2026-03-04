@@ -1,36 +1,77 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gray UI CRM
 
-## Getting Started
+A CRM UI showcase built with Next.js App Router, shadcn/ui primitives, and a reusable data-grid architecture.
 
-First, run the development server:
+The project focuses on practical CRM workflows (company list, detail views, editable cells, task board interactions) with local mock data so it runs out of the box.
+
+## Highlights
+
+- Companies dashboard with configurable table columns, sorting, filtering, and inline editing
+- Company detail route with drawer/workspace layout and linked entities
+- Reusable `DataGrid` system split into composable table parts and hooks
+- Task board interactions for account workflows (in-progress, review, blocked, todo, done)
+- TypeScript-first codebase with App Router conventions
+
+## Tech Stack
+
+- Next.js 16
+- React 19
+- TypeScript 5
+- Tailwind CSS 4
+- shadcn/ui + Base UI
+- dnd-kit
+
+## Quick Start
+
+### Prerequisites
+
+- Node.js 20+
+- pnpm 10+
+
+### Install and run
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+pnpm dev        # Start local dev server
+pnpm lint       # Run ESLint
+pnpm typecheck  # Run TypeScript checks
+pnpm build      # Create production build
+pnpm start      # Start production server
+```
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+```text
+app/                    # App Router routes and layouts
+components/             # Reusable UI and feature components
+components/data-grid/   # Generic data-grid engine
+components/companies/   # Companies feature modules
+lib/                    # Mock domain data + helpers
+public/                 # Static assets
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Data and Demo Content
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+- The repository uses mock in-memory data from `lib/*`.
+- Company names/logos are used for UI demonstration only.
+- This is not an official product of those brands.
 
-## Deploy on Vercel
+## Contributing
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Please read [CONTRIBUTING.md](./CONTRIBUTING.md) before opening issues or PRs.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Security
+
+If you discover a security issue, please follow [SECURITY.md](./SECURITY.md).
+
+## License
+
+This project is licensed under the [MIT License](./LICENSE).
