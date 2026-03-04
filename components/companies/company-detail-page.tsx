@@ -4,7 +4,7 @@ import * as React from "react"
 
 import { Building01Icon } from "@hugeicons/core-free-icons"
 
-import { CompanyDetailWorkspace } from "@/components/companies/company-detail-workspace"
+import { CompanyDetailWorkspace } from "@/components/companies/company-detail-workspace-shell"
 import { PageContent } from "@/components/page-content"
 import { PageHeader } from "@/components/page-header"
 import { PageMain } from "@/components/page-main"
@@ -26,7 +26,7 @@ export function CompanyDetailPage({ company }: { company: CompanyRecord }) {
         ]}
       />
 
-      <PageContent className="scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden p-4 md:p-5">
+      <PageContent className="scrollbar-none [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden  md:p-5">
         <CompanyDetailWorkspace
           company={companyState}
           onCompanyChange={(updater) => {
